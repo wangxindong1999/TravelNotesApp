@@ -19,6 +19,7 @@ const routes = [
         name: "Homes",
         component: Homes,
         options: {
+          headerShown: false,
           //options中设置标题格式，公共样式在menu里
           title: "首页",
         },
@@ -27,6 +28,7 @@ const routes = [
         name: "Homess",
         component: Homess,
         options: {
+          headerShown: false,
           title: "首页2",
         },
       },

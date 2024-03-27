@@ -1,8 +1,8 @@
 import React, { useEffect } from "react"
 import { StyleSheet } from "react-native"
-import { Button } from "antd-mobile"
 import { useSelector, useDispatch } from "react-redux"
 import { setName, setAge } from "../../store/feature/userSlice"
+import { Button } from "@rneui/themed"
 
 export default function Homes() {
   const dispatch = useDispatch()
@@ -20,5 +20,10 @@ export default function Homes() {
     dispatch(setName("John"))
     dispatch(setAge(20))
   }, [])
-  return <div style={styles.container}>Homes</div>
+  return (
+    <div style={styles.container}>
+      Homes
+      <Button>测试按钮</Button>
+    </div>
+  )
 }
