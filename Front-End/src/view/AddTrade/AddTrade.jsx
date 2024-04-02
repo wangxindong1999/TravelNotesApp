@@ -4,11 +4,10 @@ import { useSelector, useDispatch } from "react-redux"
 import { setName, setAge } from "../../store/feature/userSlice"
 import { Button } from "@rneui/themed"
 
-export default function Homes() {
+export default function AddTrade() {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
   const theme = useSelector((state) => state.theme)
-
   const styles = StyleSheet.create({
     container: {
       backgroundColor: theme.back_theme,
@@ -20,10 +19,5 @@ export default function Homes() {
     dispatch(setName("John"))
     dispatch(setAge(20))
   }, [])
-  return (
-    <div style={styles.container}>
-      Homes
-      <Button>测试按钮</Button>
-    </div>
-  )
+  return <div style={styles.container}>AddTrade</div>
 }
