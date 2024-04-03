@@ -1,0 +1,73 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  border-bottom: 2px solid #e9ecef;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  color: #155730;
+}
+.header > h1 {
+  font-size: 40px;
+  font-weight: 700;
+  font-family: 方正舒体;
+  letter-spacing: 2.5vw;
+}
+.header > .header-search {
+  width: 30vw;
+}
+.header > .header-search::before {
+  content: "";
+  width: 34px;
+  height: 33.5px;
+  position: absolute;
+  background-color: rgb(255, 255, 255);
+  margin-left: -15px;
+  border-radius: 17px;
+  border: 2px solid #155730;
+}
+.header > .header-search input {
+  border-radius: 0;
+  border: 2px solid #155730;
+  border-left: none;
+  border-right: none;
+  box-shadow: none;
+}
+.header > .header-search input:focus {
+  border-color: #155730;
+  box-shadow: none;
+}
+.header > .header-search input:hover {
+  border-color: #155730;
+  box-shadow: none;
+}
+.header > .header-search .ant-input-group-addon {
+  border-radius: 0 17px 17px 0;
+  overflow: hidden;
+  border: 2px solid #155730 !important;
+  border-left: none !important;
+  background-color: #ffffff;
+}
+.header > .header-search .ant-input-group-addon > button {
+  width: 30px;
+  height: 30px;
+  border: none;
+}
+.header-userinfo {
+  display: flex;
+  align-items: center;
+}
+.header-userinfo .header-userinfo-img {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: rgb(64, 37, 37);
+  align-items: center;
+  margin-right: 10px;
+}
+.header-userinfo span {
+  margin: 0 5px;
+}
