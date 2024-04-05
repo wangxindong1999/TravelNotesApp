@@ -7,16 +7,20 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons"
-import { MenuItems } from "../../router/index"
+import { MenuItems } from "@/router/index"
 const { Content, Sider } = Layout
-const MenuItem = MenuItems.map((item) => {
-  return {
-    key: item.path,
-    label: item.name,
-    path: item.path,
-    icon: item.icon,
-  }
-})
+const MenuItem = MenuItems[0].children
+  .filter((item) => {
+    return item.isShow !== false
+  })
+  .map((item) => {
+    return {
+      key: item.path,
+      label: item.name,
+      path: item.path,
+      icon: item.icon,
+    }
+  })
 
 export default function Main() {
   const nav = useNavigate()

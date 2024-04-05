@@ -8,7 +8,8 @@ import AllIcon from "../components/Icon/AllIcon"
 import PassedIcon from "../components/Icon/Passed"
 import PendingIcon from "../components/Icon/Pending"
 import FailedIcon from "../components/Icon/Failed"
-const routes = [
+import Details from "../view/Details/Details"
+const basicRoutes = [
   {
     path: "/login",
     component: lazy(() => import("../view/Login/Login")),
@@ -17,6 +18,8 @@ const routes = [
     path: "/register",
     component: lazy(() => import("../view/Register/Register")),
   },
+]
+const otherRoutes = [
   {
     path: "/",
     name: "layout",
@@ -25,7 +28,14 @@ const routes = [
       {
         path: "/",
         name: "home",
+        isShow: false,
         component: () => <Navigate to="/home"></Navigate>,
+      },
+      {
+        path: "details",
+        name: "详情",
+        isShow: false,
+        component: Details,
       },
       {
         path: "home",
@@ -58,34 +68,6 @@ const routes = [
     ],
   },
 ]
-export const MenuItems = [
-  {
-    path: "home",
-    name: "全部游记",
-    // component: lazy(() => import("../view/Home/Home")),
-    component: Home,
-    icon: <AllIcon></AllIcon>,
-  },
-  {
-    path: "passed",
-    name: "已通过",
-    // component: lazy(() => import("../view/Passed/Passed")),
-    component: Passed,
-    icon: <PassedIcon></PassedIcon>,
-  },
-  {
-    path: "pending",
-    name: "待审核",
-    // component: lazy(() => import("../view/Pending/Pending")),
-    component: Pending,
-    icon: <PendingIcon></PendingIcon>,
-  },
-  {
-    path: "failed",
-    name: "未通过",
-    // component: lazy(() => import("../view/Failed/Failed")),
-    component: Failed,
-    icon: <FailedIcon></FailedIcon>,
-  },
-]
+const routes = [...basicRoutes, ...otherRoutes]
+export const MenuItems = [...otherRoutes]
 export default routes
