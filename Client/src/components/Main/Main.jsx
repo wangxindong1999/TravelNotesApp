@@ -17,16 +17,6 @@ const MenuItem = MenuItems.map((item) => {
     icon: item.icon,
   }
 })
-// const items = [
-//   UserOutlined,
-//   VideoCameraOutlined,
-//   UploadOutlined,
-//   UserOutlined,
-// ].map((icon, index) => ({
-//   key: String(index + 1),
-//   icon: React.createElement(icon),
-//   label: `nav ${index + 1}`,
-// }))
 
 export default function Main() {
   const nav = useNavigate()
@@ -55,7 +45,11 @@ export default function Main() {
           <Menu
             onSelect={routerChange}
             mode="inline"
-            defaultSelectedKeys={[location.pathname.split("/")[1]]}
+            defaultSelectedKeys={[
+              location.pathname.split("/")[1]
+                ? location.pathname.split("/")[1]
+                : "home",
+            ]}
             items={MenuItem}
           />
         </Sider>
