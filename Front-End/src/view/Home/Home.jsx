@@ -1,6 +1,13 @@
 import React from "react"
-import { Text } from "react-native"
+import { Text, Button, View } from "react-native"
+import { useNavigation } from "@react-navigation/native"
 
 export default function Home() {
-  return <Text>Home</Text>
+  const navigation = useNavigation()
+  return (
+    <View>
+      <Text>Home</Text>
+      <Button title="click me" onPress={() => navigation.navigate('Login')}></Button>
+    </View>
+  )
 }
