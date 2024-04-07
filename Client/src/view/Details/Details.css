@@ -1,6 +1,8 @@
 .detail {
-  min-height: calc(100vh - 166px);
+  min-height: calc(100vh - 176px);
   background-color: rgb(143, 179, 157);
+  position: relative;
+  overflow: hidden;
 }
 .detail-header {
   display: flex;
@@ -79,4 +81,9 @@
 }
 .detail-btn > :last-child {
   background-color: #000;
+}
+
+.detail-failed {
+  padding: 5px 3vw;
+  color: rgb(233, 85, 85);
 }

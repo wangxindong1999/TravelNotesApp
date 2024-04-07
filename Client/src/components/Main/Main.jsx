@@ -1,5 +1,10 @@
 import React from "react"
-import { Outlet, useLocation, useNavigate } from "react-router-dom"
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom"
 import router from "../../router/index"
 import { Layout, Menu } from "antd"
 import {
@@ -24,13 +29,17 @@ const MenuItem = MenuItems[0].children
 
 export default function Main() {
   const nav = useNavigate()
-  const location = useLocation()
   const routerChange = ({
     item: {
       props: { path },
     },
   }) => {
+    localStorage.setItem("currentPath", path)
     nav(path)
+  }
+  const defaultkeys = () => {
+    const path = localStorage.getItem("currentPath")
+    return [path]
   }
   return (
     <div>
@@ -49,11 +58,7 @@ export default function Main() {
           <Menu
             onSelect={routerChange}
             mode="inline"
-            defaultSelectedKeys={[
-              location.pathname.split("/")[1]
-                ? location.pathname.split("/")[1]
-                : "home",
-            ]}
+            defaultSelectedKeys={defaultkeys()}
             items={MenuItem}
           />
         </Sider>

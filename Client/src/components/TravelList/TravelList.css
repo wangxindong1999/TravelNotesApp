@@ -1,9 +1,9 @@
 .travel-card-item {
   background-color: rgb(255, 255, 255);
   margin: 15px 10px;
-  height: 16vh;
+  height: 23vh;
   border: 1px solid #e0e0e0;
-  box-shadow: 2px 2px 2px #888888;
+  box-shadow: 10px 10px 10px #f4f3f3;
   min-height: 120px;
   cursor: pointer;
 }
@@ -11,7 +11,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 14vh;
+  height: 21vh;
   margin: 7px;
   min-height: 105px;
 }
@@ -42,7 +42,7 @@ img {
 }
 #travel-content > .travel-content-title {
   text-align: center;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: bold;
   display: block;
   white-space: nowrap;
@@ -50,7 +50,9 @@ img {
   text-overflow: ellipsis;
 }
 #travel-content > .travel-content-dec {
-  font-size: 12px;
+  font-size: 17px;
+  color: rgb(141, 143, 144);
+  font-weight: 800;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;

@@ -4,6 +4,7 @@ import testimg from "@/assets/avatar1.jpg"
 import TravelList from "@/components/TravelList/TravelList"
 import TravelTitle from "@/components/TravelTitle/TravelTitle"
 import { Outlet } from "react-router-dom"
+import { Pagination } from "antd"
 const mapLsit = (travelData) => {
   return travelData.map((item, index) => {
     return (
@@ -37,7 +38,6 @@ const filterList = (travelData, type) => {
     })
 }
 export default function Travel(props) {
-  console.log(props, "props")
   const { data: travelData, type } = props
   return (
     <div>
@@ -46,6 +46,14 @@ export default function Travel(props) {
         {type ? filterList(travelData, type) : mapLsit(travelData)}
       </section>
       <Outlet></Outlet>
+      <Pagination
+        style={{ textAlign: "center" }}
+        defaultCurrent={1}
+        total={30}
+        // pageSize={3}
+        showSizeChanger={true}
+        pageSizeOptions={[3, 5, 7, 10, 20, 50]}
+      />
     </div>
   )
 }

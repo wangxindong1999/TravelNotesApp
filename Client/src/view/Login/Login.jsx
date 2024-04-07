@@ -1,11 +1,12 @@
 import React, { useEffect } from "react"
-import { Button, Form, Input, message, Col, Row } from "antd"
+import { Button, Form, Input, message, Col, Row, Image } from "antd"
 import { Base64 } from "js-base64"
 import "./Login.css"
 import { login } from "../../api/user"
 import Cookies from "js-cookie"
 import UserIcon from "../../components/Icon/UserIcon"
 import PasswordIcon from "../../components/Icon/PasswordIcon"
+import loginImg from "@/assets/登录web.jpg"
 export default function Login(props) {
   const { navigate } = props
   // const dispatch = useDispatch()
@@ -36,7 +37,7 @@ export default function Login(props) {
       <div className="login-main">
         <div className="login-form">
           <Row style={{ height: "100%" }}>
-            <Col span={12} style={{ backgroundColor: "red" }}></Col>
+            <Col className="login-form-img" span={12}></Col>
             <Col className="login-form-right" span={12}>
               <div className="login-title">
                 <h1>游记本</h1>

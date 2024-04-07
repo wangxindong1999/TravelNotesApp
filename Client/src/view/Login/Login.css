@@ -10,11 +10,17 @@
   left: 0;
   right: 0;
   margin: auto;
-  width: 70vw;
+  width: 57vw;
   height: 70vh;
   border-radius: 5px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   background-color: #ffffff;
+}
+.login-form-img {
+  background-image: url("../../assets/登录web.jpg");
+  /* background-size: contain; */
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 .login-form-right {
   height: 100%;

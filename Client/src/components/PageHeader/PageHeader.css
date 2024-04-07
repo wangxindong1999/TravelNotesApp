@@ -10,7 +10,7 @@
 }
 .header > h1 {
   font-size: 40px;
-  font-weight: 700;
+  font-weight: 1000;
   font-family: 方正舒体;
   letter-spacing: 2.5vw;
 }
@@ -57,6 +57,7 @@
 .header-userinfo {
   display: flex;
   align-items: center;
+  margin-right: 20px;
 }
 .header-userinfo .header-userinfo-img {
   display: flex;

@@ -9,8 +9,8 @@ export default function TravelList(props) {
   const nav = useNavigate()
   //路由跳转至详情页
   const toDetail = (id) => {
-    console.log("toDetail", id)
-    nav(`/details`)
+    console.log("toDetail", id, flag)
+    nav(`/details?id=${id}&flag=${flag}`)
   }
   //删除
   const handleDelete = (id, e) => {
@@ -49,7 +49,7 @@ export default function TravelList(props) {
           </div>
           <div>
             <Button
-              onClick={handleDelete.bind(null, id)}
+              onClick={handleDelete.bind(null, id, flag)}
               className="travel-content-button delete-btn"
             >
               删除
