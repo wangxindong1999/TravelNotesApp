@@ -35,9 +35,9 @@ export default function TravelList(props) {
         </Col>
         <Col className="travel-btn" span={6}>
           <div>
-            {flag === "passed" ? (
+            {flag === "published" ? (
               <Button className="travel-content-button">已通过</Button>
-            ) : flag === "pending" ? (
+            ) : flag === "committed" ? (
               <Button className="travel-content-button pending-btn">
                 待审核
               </Button>

@@ -2,7 +2,27 @@ import request from "../util/request"
 
 export function getList() {
   return request({
-    url: "/list/getList",
+    url: "/travels/getTravelsList",
+    method: "get",
+  })
+}
+
+export function getRejectedList() {
+  return request({
+    url: "/travels/getRejectedList",
+    method: "get",
+  })
+}
+
+export function getPublishList() {
+  return request({
+    url: "/travels/getPublishList",
+    method: "get",
+  })
+}
+export function getCommittedList() {
+  return request({
+    url: "/travels/getCommittedList",
     method: "get",
   })
 }

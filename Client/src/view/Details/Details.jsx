@@ -102,7 +102,7 @@ export default function Details(props) {
           薯条世、炸鱿鱼抗饿小食:披萨、炸鸡🥞🥓、喜圈、鸭脖子、鸡爪(虎皮、酸辣)、素的卤菜(海带丝、腐竹、藕片)、🥕鸡翅(喜欢汉堡号、自热锅之类的也可以)甜品:蛋糕罍、麻薯、桃酥、泡芙、肉松小贝零食:薯片、虾条、瓜子、辣条，🥞🥔反正是喜欢吃什么就带什么水果:各种果切🥓🥙🥕和方便带的水果，
         </p>
       </section>
-      {flag === "pending" ? (
+      {flag === "committed" ? (
         //  待审核页脚
         <>
           <section className="detail-btn">
@@ -147,7 +147,7 @@ export default function Details(props) {
             </div>
           </Drawer>
         </>
-      ) : flag === "failed" ? (
+      ) : flag === "rejected" ? (
         // 审核未通过页脚
         <section className="detail-failed">
           <h3>违规类型：违规词</h3>

@@ -2,10 +2,10 @@ import React, { useEffect } from "react"
 import { Button, Form, Input, message, Col, Row, Image } from "antd"
 import { Base64 } from "js-base64"
 import "./Login.css"
-import { login } from "../../api/user"
+import { login } from "@/api/user"
 import Cookies from "js-cookie"
-import UserIcon from "../../components/Icon/UserIcon"
-import PasswordIcon from "../../components/Icon/PasswordIcon"
+import UserIcon from "@/components/Icon/UserIcon"
+import PasswordIcon from "@/components/Icon/PasswordIcon"
 import loginImg from "@/assets/登录web.jpg"
 export default function Login(props) {
   const { navigate } = props
@@ -13,17 +13,34 @@ export default function Login(props) {
   const [messageApi, contextHolder] = message.useMessage()
   const onFinishFailed = (errorInfo) => {}
   const onFinish = (values) => {
-    values.password = Base64.encode(values.password)
-    login(values).then((res) => {
-      if (res.status === 200) {
-        navigate("/")
-      } else {
-        messageApi.open({
-          type: "error",
-          content: "用户名或密码错误",
-        })
-      }
-    })
+    // values.password = Base64.encode(values.password)
+    login(values)
+      .then((res) => {
+        if (res.status === 200) {
+          navigate("/")
+        } else {
+          messageApi.open({
+            type: "error",
+            content: "用户名或密码错误",
+          })
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          messageApi.open({
+            type: "error",
+            content: "密码错误",
+          })
+          return
+        }
+        if (err.response.status === 404) {
+          messageApi.open({
+            type: "error",
+            content: "用户不存在",
+          })
+          return
+        }
+      })
   }
   const register = () => {
     navigate("/register")
