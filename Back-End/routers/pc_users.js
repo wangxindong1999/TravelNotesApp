@@ -21,16 +21,6 @@ router.post("/user/login", async (req, res) => {
       res.end()
       return
     }
-    // const compare = bcrypt.compareSync(
-    //   Base64.decode(req.body.password),
-    //   result[0].password
-    // )
-    // if (!compare) {
-    //   res.status(401)
-    //   res.send("密码错误")
-    //   res.end()
-    //   return
-    // }
     const compare = req.body.password === result[0].password
     if (!compare) {
       res.status(401)
@@ -42,7 +32,12 @@ router.post("/user/login", async (req, res) => {
       req.session.newdate = Date.now()
       req.session.username = req.body.username
       // res.status(200)
-      res.send("登录成功")
+      res.send({
+        message: "登录成功",
+        username: req.body.username,
+        position: result[0].isAdmin ? "管理者" : "审核者",
+        userImg: result[0].userImg,
+      })
       res.end()
       return
     }
@@ -55,22 +50,30 @@ router.post("/user/login", async (req, res) => {
   }
 })
 router.post("/user/register", async (req, res) => {
+  console.log(req.body)
   try {
     await client.connect()
-    const database = client.db("task")
+    const database = client.db("travels")
     const collection = database.collection("users")
     const result = await collection
       .find({ username: req.body.username })
       .toArray()
     if (result.length !== 0) {
-      res.status(203)
+      res.status(401)
       res.send("用户已存在")
       res.end()
       return
     }
     const result2 = await collection.insertOne({
       username: req.body.username,
-      password: bcrypt.hashSync(Base64.decode(req.body.password), saltRounds),
+      password: req.body.password,
+      isAdmin: req.body.isAdmin,
+      isReviewer: req.body.isReviewer,
+      admin_id: req.body.admin_id,
+      reviewer_id: req.body.reviewer_id,
+      createdAt: req.body.createdAt,
+      updatedAt: req.body.updatedAt,
+      userImg: req.body.userImg,
     })
     res.send("注册成功")
     res.end()
@@ -85,5 +88,36 @@ router.post("/user/logout", async (req, res) => {
   req.session.destroy()
   res.send("退出成功")
   res.end()
+})
+//查找用户信息
+router.get("/user/info", async (req, res) => {
+  const cookieValue = req.session.username
+  if (!cookieValue) {
+    res.status(401)
+    res.send("未登录")
+    res.end()
+    return
+  }
+  if (req.session.newdate) {
+    try {
+      await client.connect()
+      const database = client.db("travels")
+      const collection = database.collection("users")
+      const result = await collection.find({ username: cookieValue }).toArray()
+      req.session.newdate = Date.now()
+      res.status(200)
+      res.send({
+        userImg: result[0].userImg,
+        username: result[0].username,
+        position: result[0].isAdmin ? "管理者" : "审核者",
+      })
+      res.end()
+    } catch (e) {
+      res.status(500)
+      res.end("服务器错误")
+    } finally {
+      await client.close()
+    }
+  }
 })
 module.exports = router
