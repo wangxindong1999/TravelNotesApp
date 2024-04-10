@@ -1,8 +1,9 @@
 .detail {
-  min-height: calc(100vh - 176px);
+  min-height: calc(100vh - 166px);
   background-color: rgb(143, 179, 157);
   position: relative;
   overflow: hidden;
+  border-radius: 10px;
 }
 .detail-header {
   display: flex;

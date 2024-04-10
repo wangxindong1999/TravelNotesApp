@@ -1,15 +1,15 @@
 import React, { useEffect } from "react"
 import { Button, Form, Input, message, Col, Row, Image } from "antd"
-import { Base64 } from "js-base64"
 import "./Login.css"
 import { login } from "@/api/user"
 import Cookies from "js-cookie"
 import UserIcon from "@/components/Icon/UserIcon"
 import PasswordIcon from "@/components/Icon/PasswordIcon"
-import loginImg from "@/assets/登录web.jpg"
+import { useDispatch } from "react-redux"
+import { setUserInfo } from "@/store/userSlice"
 export default function Login(props) {
   const { navigate } = props
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
   const [messageApi, contextHolder] = message.useMessage()
   const onFinishFailed = (errorInfo) => {}
   const onFinish = (values) => {
@@ -17,6 +17,7 @@ export default function Login(props) {
     login(values)
       .then((res) => {
         if (res.status === 200) {
+          dispatch(setUserInfo(res.data))
           navigate("/")
         } else {
           messageApi.open({

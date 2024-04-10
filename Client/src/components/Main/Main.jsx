@@ -1,17 +1,6 @@
-import React from "react"
-import {
-  Outlet,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom"
-import router from "../../router/index"
+import { Outlet, useNavigate } from "react-router-dom"
 import { Layout, Menu } from "antd"
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons"
+
 import { MenuItems } from "@/router/index"
 const { Content, Sider } = Layout
 const MenuItem = MenuItems[0].children
@@ -26,19 +15,22 @@ const MenuItem = MenuItems[0].children
       icon: item.icon,
     }
   })
-
 export default function Main() {
   const nav = useNavigate()
+
+  if (!sessionStorage.getItem("currentPath")) {
+    sessionStorage.setItem("currentPath", "home")
+  }
   const routerChange = ({
     item: {
       props: { path },
     },
   }) => {
-    localStorage.setItem("currentPath", path)
+    sessionStorage.setItem("currentPath", path)
     nav(path)
   }
   const defaultkeys = () => {
-    const path = localStorage.getItem("currentPath")
+    const path = sessionStorage.getItem("currentPath")
     return [path]
   }
   return (

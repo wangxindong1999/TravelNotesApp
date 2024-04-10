@@ -1,8 +1,6 @@
-import React from "react"
 import { Button, Form, Input, message } from "antd"
 import "./Register.css"
-import { register as registerUser } from "../../api/user"
-import { Base64 } from "js-base64"
+import { register as registerUser } from "@/api/user"
 
 export default function Register(props) {
   const { navigate } = props
@@ -10,7 +8,6 @@ export default function Register(props) {
   const [messageApi, contextHolder] = message.useMessage()
   const onFinish = (values) => {
     const reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[a-zA-Z0-9]{6,15}$/
-    console.log(reg.test(values.password))
     if (values.password !== values.confirm) {
       form.setFields([
         {
@@ -29,21 +26,49 @@ export default function Register(props) {
       ])
       return
     }
-    values.password = Base64.encode(values.password)
-    registerUser(values).then((res) => {
-      if (res.status === 200) {
-        messageApi.open({
-          type: "success",
-          content: "注册成功，请登录",
-        })
-        navigate("/login")
-      } else {
-        messageApi.open({
-          type: "error",
-          content: "用户名已存在",
-        })
-      }
-    })
+    // values.password = Base64.encode(values.password)
+    const date = new Date()
+    const createDate = `${date.getFullYear()}-${
+      date.getMonth() + 1
+    }-${date.getDate()}T${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    const data = {
+      username: "",
+      password: "",
+      isAdmin: false,
+      isReviewer: true,
+      admin_id: "",
+      reviewer_id: "",
+      createdAt: createDate,
+      updatedAt: createDate,
+      userImg: "",
+    }
+    registerUser({ ...data, ...values })
+      .then((res) => {
+        if (res.status === 200) {
+          messageApi
+            .open({
+              type: "success",
+              content: "注册成功，请登录",
+              duration: 1,
+            })
+            .then(() => {
+              navigate("/login")
+            })
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          messageApi.open({
+            type: "error",
+            content: "用户名已存在",
+          })
+        } else {
+          messageApi.open({
+            type: "error",
+            content: "注册失败",
+          })
+        }
+      })
   }
 
   return (
@@ -54,13 +79,14 @@ export default function Register(props) {
           <Form
             form={form}
             labelCol={{
-              span: 8,
+              span: 6,
             }}
             wrapperCol={{
               span: 16,
             }}
             style={{
               maxWidth: 600,
+              width: "50vw",
             }}
             initialValues={{
               remember: true,
@@ -106,7 +132,7 @@ export default function Register(props) {
             </Form.Item>
             <Form.Item
               wrapperCol={{
-                offset: 8,
+                offset: 6,
                 span: 16,
               }}
             >
