@@ -6,6 +6,7 @@ import { Text, Image, View } from "react-native"
 import ImgSource from "../assets/index"
 import Search from "../view/Home/search"
 import Person from "../view/MyInfo/person"
+import Details from "../view/Details/Details"
 
 
 //路由配置
@@ -56,7 +57,10 @@ const routes = [
     options: {
       title: "个人中心",
     },
-    
+  },
+  {
+    name:"Details",
+    component:Details,
   },
   {
     name: "Login", //可以暂设为登录路由

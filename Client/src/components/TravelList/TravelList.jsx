@@ -1,11 +1,13 @@
-import React from "react"
-import { Row, Col, Button } from "antd"
-import testimg from "../../assets/avatar1.jpg"
+import { Row, Col, Button, Popconfirm, message } from "antd"
 import "./TravelList.css"
 import { useNavigate } from "react-router-dom"
+import { deleteTravel } from "@/api/travels"
+import { useSelector } from "react-redux"
 
 export default function TravelList(props) {
   const { id, imgUrl, title, content, flag } = props
+  const [messageApi, contextHolder] = message.useMessage()
+  const store = useSelector((state) => state.user)
   const nav = useNavigate()
   //路由跳转至详情页
   const toDetail = (id) => {
@@ -13,12 +15,21 @@ export default function TravelList(props) {
     nav(`/details?id=${id}&flag=${flag}`)
   }
   //删除
-  const handleDelete = (id, e) => {
-    // console.log("handleDelete", id, e)
+  const delteConfirm = (id, e) => {
     e.stopPropagation()
+    deleteTravel({
+      _id: id,
+    }).then(() => {
+      messageApi.open({
+        type: "success",
+        content: "删除成功",
+      })
+      window.location.reload()
+    })
   }
   return (
     <div className="travel-card-item" onClick={toDetail.bind(null, id)}>
+      {contextHolder}
       <Row>
         <Col span={6}>
           <div id="travel-img">
@@ -35,9 +46,9 @@ export default function TravelList(props) {
         </Col>
         <Col className="travel-btn" span={6}>
           <div>
-            {flag === "passed" ? (
+            {flag === "published" ? (
               <Button className="travel-content-button">已通过</Button>
-            ) : flag === "pending" ? (
+            ) : flag === "committed" ? (
               <Button className="travel-content-button pending-btn">
                 待审核
               </Button>
@@ -47,14 +58,21 @@ export default function TravelList(props) {
               </Button>
             )}
           </div>
-          <div>
-            <Button
-              onClick={handleDelete.bind(null, id, flag)}
-              className="travel-content-button delete-btn"
-            >
-              删除
-            </Button>
-          </div>
+          {store.userInfo.position === "管理者" ? (
+            <div onClick={(e) => e.stopPropagation()}>
+              <Popconfirm
+                description={`确认删除"${title}"吗`}
+                onConfirm={delteConfirm.bind(null, id)}
+                onCancel={(e) => e.stopPropagation()}
+                okText="是"
+                cancelText="否"
+              >
+                <Button className="travel-content-button delete-btn">
+                  删除
+                </Button>
+              </Popconfirm>
+            </div>
+          ) : null}
         </Col>
       </Row>
     </div>

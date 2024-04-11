@@ -1,4 +1,4 @@
-import { lazy } from "react"
+import { lazy, Suspense } from "react"
 import { Navigate } from "react-router-dom"
 import Home from "../view/Home/Home"
 import Passed from "../view/Passed/Passed"
@@ -9,6 +9,7 @@ import PassedIcon from "../components/Icon/Passed"
 import PendingIcon from "../components/Icon/Pending"
 import FailedIcon from "../components/Icon/Failed"
 import Details from "../view/Details/Details"
+
 const basicRoutes = [
   {
     path: "/login",

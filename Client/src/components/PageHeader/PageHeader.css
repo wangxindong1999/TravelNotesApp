@@ -7,6 +7,7 @@
   border-bottom: 2px solid #e9ecef;
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
   color: #155730;
+  position: relative;
 }
 .header > h1 {
   font-size: 40px;
@@ -22,6 +23,7 @@
   width: 34px;
   height: 33.5px;
   position: absolute;
+  top: 41.2px;
   background-color: rgb(255, 255, 255);
   margin-left: -15px;
   border-radius: 17px;
