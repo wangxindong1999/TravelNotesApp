@@ -1,27 +1,20 @@
 const express = require("express")
 const router = express.Router()
-const { MongoClient } = require("mongodb")
-const uri = "mongodb+srv://admin:admin@ctrip.e8joe2r.mongodb.net/test?retryWrites=true&w=majority&appName=Ctrip"
-const client = new MongoClient(uri)
-const Base64 = require("js-base64").Base64
-const bcrypt = require("bcrypt")
-const saltRounds = 10
+// const uri = "mongodb://127.0.0.1:27017"
+const usersSchema = require("../modules/usersModel")
+const fs = require("fs")
+const path = require("path")
 
-router.post("/user/login", async (req, res) => {
+router.get("/user/login", async (req, res) => {
   try {
-    await client.connect()
-    const database = client.db("travels")
-    const collection = database.collection("users")
-    const result = await collection
-      .find({ username: req.body.username })
-      .toArray()
-    if (result.length === 0 || (!result[0].isAdmin && !result[0].isReviewer)) {
+    const result = await usersSchema.findOne({ username: req.query.username })
+    if (!result.id || (!result.isAdmin && !result.isReviewer)) {
       res.status(404)
       res.send("用户不存在")
       res.end()
       return
     }
-    const compare = req.body.password === result[0].password
+    const compare = req.query.password === result.password
     if (!compare) {
       res.status(401)
       res.send("密码错误")
@@ -30,13 +23,15 @@ router.post("/user/login", async (req, res) => {
     }
     if (compare) {
       req.session.newdate = Date.now()
-      req.session.username = req.body.username
-      // res.status(200)
+      req.session.username = req.query.username
+      const imageName = result.userImg // 图片名称
+      const imagePath = "img/" + imageName + ".png" // 图片的完整路径
+      const imageBuffer = fs.readFileSync(imagePath) // 读取图片
+      const imageBase64 = imageBuffer.toString("base64") // 转换为 Base64
       res.send({
         message: "登录成功",
-        username: req.body.username,
-        position: result[0].isAdmin ? "管理者" : "审核者",
-        userImg: result[0].userImg,
+        username: req.query.username,
+        position: result.isAdmin ? "管理者" : "审核者",
       })
       res.end()
       return
@@ -45,25 +40,23 @@ router.post("/user/login", async (req, res) => {
   } catch (e) {
     res.status(500)
     res.end("服务器错误")
-  } finally {
-    await client.close()
   }
 })
 router.post("/user/register", async (req, res) => {
   try {
-    await client.connect()
-    const database = client.db("travels")
-    const collection = database.collection("users")
-    const result = await collection
-      .find({ username: req.body.username })
-      .toArray()
+    const result = await usersSchema.find({ username: req.body.username })
     if (result.length !== 0) {
       res.status(401)
       res.send("用户已存在")
       res.end()
       return
     }
-    const result2 = await collection.insertOne({
+    // 将 Base64 数据转换为 Buffer
+    const buffer = Buffer.from(req.body.userImg, "base64")
+    const uuid = req.body.username + new Date().getTime()
+    const filePath = "img/" + uuid + ".png"
+    fs.writeFileSync(filePath, buffer)
+    const result2 = await usersSchema.create({
       username: req.body.username,
       password: req.body.password,
       isAdmin: req.body.isAdmin,
@@ -72,15 +65,13 @@ router.post("/user/register", async (req, res) => {
       reviewer_id: req.body.reviewer_id,
       createdAt: req.body.createdAt,
       updatedAt: req.body.updatedAt,
-      userImg: req.body.userImg,
+      userImg: uuid,
     })
     res.send("注册成功")
     res.end()
   } catch (e) {
     res.status(500)
     res.end("服务器错误")
-  } finally {
-    await client.close()
   }
 })
 router.post("/user/logout", async (req, res) => {
@@ -99,23 +90,22 @@ router.get("/user/info", async (req, res) => {
   }
   if (req.session.newdate) {
     try {
-      await client.connect()
-      const database = client.db("travels")
-      const collection = database.collection("users")
-      const result = await collection.find({ username: cookieValue }).toArray()
+      const result = await usersSchema.findOne({ username: cookieValue })
       req.session.newdate = Date.now()
+      const imageName = result.userImg // 图片名称
+      const imagePath = "img/" + imageName + ".png" // 图片的完整路径
+      const imageBuffer = fs.readFileSync(imagePath) // 读取图片
+      const imageBase64 = imageBuffer.toString("base64") // 转换为 Base64
       res.status(200)
       res.send({
-        userImg: result[0].userImg,
-        username: result[0].username,
-        position: result[0].isAdmin ? "管理者" : "审核者",
+        userImg: imageBase64,
+        username: result.username,
+        position: result.isAdmin ? "管理者" : "审核者",
       })
       res.end()
     } catch (e) {
       res.status(500)
       res.end("服务器错误")
-    } finally {
-      await client.close()
     }
   }
 })

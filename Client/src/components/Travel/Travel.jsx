@@ -45,7 +45,7 @@ export default function Travel(props) {
           res.data.data.map((item) => {
             return {
               id: item._id,
-              imgUrl: item.images[0],
+              imgUrl: item.images.thumbURL,
               title: item.title,
               content: item.content,
               flag: item.status,
@@ -71,7 +71,7 @@ export default function Travel(props) {
           res.data.data.map((item) => {
             return {
               id: item._id,
-              imgUrl: item.images[0],
+              imgUrl: item.images.thumbURL,
               title: item.title,
               content: item.content,
               flag: item.status,

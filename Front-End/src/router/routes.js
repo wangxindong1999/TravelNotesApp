@@ -33,7 +33,7 @@ const routes = [
         component: Home,
         options: {
           headerShown: false,
-          //options中设置标题格式，公共样式在menu里
+          //options中设置标题格式`，公共样式在menu里
           title: "首页",
         },
       },

@@ -64,7 +64,7 @@ export default function Details(props) {
     ref.current.parentNode.style.padding = "0"
     getDetail(id)
       .then((res) => {
-        // console.log(res)
+        console.log(res)
         settraveldetail(
           res.data.map((item) => {
             return {
@@ -77,6 +77,7 @@ export default function Details(props) {
               updatedAt: item.updatedAt,
               reason: item.reason,
               reason_type: item.reason_type,
+              userImg: item.userImg,
             }
           })[0]
         )
@@ -143,7 +144,7 @@ export default function Details(props) {
           <section className="detail-header">
             <div className="detail-header-info">
               <div className="detail-header-img">
-                <img src={ImgUrl} alt="" />
+                <img src={travelDetail.userImg} alt="" />
               </div>
               <div className="detail-header-content">
                 <p>
@@ -196,7 +197,12 @@ export default function Details(props) {
                     key={index}
                   >
                     {/* <img src={item} alt="" /> */}
-                    <Image width={200} height={250} src={item} key={index} />
+                    <Image
+                      width={200}
+                      height={250}
+                      src={item.thumbURL}
+                      key={index}
+                    />
                   </Col>
                 )
               })}
