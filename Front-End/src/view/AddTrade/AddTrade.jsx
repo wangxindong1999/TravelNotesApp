@@ -1,30 +1,123 @@
 import React, { useEffect, useState } from "react"
-// import { StyleSheet } from "react-native"
 import { useSelector, useDispatch } from "react-redux"
-import { setName, setAge } from "../../store/feature/userSlice"
+import { selectUser, logout } from "../../store/feature/userSlice"
 import { Button, Input } from "@rneui/themed"
 import { View, ScrollView, Image, Text, TextInput, StyleSheet, TouchableOpacity, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
+import * as FileSystem from 'expo-file-system';
 
 export default function AddTrade() {
   const navigation = useNavigation()
   const [height, setHeight] = useState(0);
-  const dispatch = useDispatch()
-  const user = useSelector((state) => state.user)
-  const theme = useSelector((state) => state.theme)
-  // const styles = StyleSheet.create({
-  //   container: {
-  //     backgroundColor: theme.back_theme,
-  //     color: theme.font_theme,
-  //   },
-  // })
-  useEffect(() => {
-    // console.log("user", user)
-    dispatch(setName("John"))
-    dispatch(setAge(20))
-  }, [])
+  // const dispatch = useDispatch()
+  // const user = useSelector((state) => state.user)
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [images, setImages] = useState([])
+
+  // 先登录
+  // useEffect(() => {
+  //   if (user.username === "") {
+  //     navigation.navigate("Login")
+  //   }
+  // }, [user])
+
+  // 添加图片
+  const handleSelectImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [3, 4],
+      quality: 1,
+      base64: true,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      // setImages(result.assets[0].base64);
+      setImages(prevImages => [...prevImages, {
+        uri: result.assets[0].uri,
+        base64: result.assets[0].base64,
+        height: result.assets[0].height,
+        width: result.assets[0].width
+      }
+    ]);
+    }
+  }
+
+  // 图片列表
+  const renderImages = () => {
+    return images.map((image, index) => {
+      return (
+        <Image
+          key={index}
+          source={{ uri: image.uri }}
+          style={styles.imageList}
+        />
+      )
+    })
+  }
+
+  // 图片压缩
+  const compreeeImage = async (uri) => {
+    const compressedImage = await ImageManipulator.manipulateAsync(
+      uri,
+      [{ resize: { width: 300 } }],
+      { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
+    )
+    return compressedImage.uri;
+}
+
+  // 存入数据库
+  const handleSubmit = async (status) => {
+    try {
+      const compressedImagesPromises = images.map(async (image) => compreeeImage(image.uri));
+      const compressedImages = await Promise.all(compressedImagesPromises);
+      const response = await fetch("http://10.0.2.2:3000/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          title: title,
+          content: content,
+          images: compressedImages,
+          status: status,
+          user: "6616cdfea41ccfe9f7678ff1", // user先以此代替
+        }),
+    })
+    if (response.ok) {
+      setTitle("")
+      setContent("")
+      setImages([])
+      alert("发布成功")
+      navigation.navigate("MyInfo")
+    } else {
+      alert("发布失败")
+    } 
+  } catch (error) {
+      console.error("Error:", error)
+    }
+  }
+
+  // 存入草稿箱
+  const handleDraft = () => {
+    console.log("存入草稿箱")
+    handleSubmit("draft")
+  }
+
+  // 发布游记
+  const handlePublish = () => {
+    console.log("发布游记")
+    handleSubmit("committed")
+  }
+ 
   return (
     <View style={styles.background}>
       <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
@@ -36,40 +129,42 @@ export default function AddTrade() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={{width: wp("100%")}}>
-        <TouchableOpacity style={styles.addImageContainer}>
-          <Image
-            source={require("../../assets/加号_o.png")}
-            style={styles.addImage}
-          />
-        </TouchableOpacity>
+      <ScrollView style={{width: wp("100%"), height: hp("15%")}}>
+        <ScrollView style={{width: "100%"}} horizontal={true} showsHorizontalScrollIndicator={true}>
+          <View style={styles.imageListContainer}>
+            {renderImages()}
+            <TouchableOpacity style={styles.addImageContainer} onPress={handleSelectImage}>
+              <Image
+                source={require("../../assets/加号_o.png")}
+                style={styles.addImage}
+              />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
         <TextInput
           style={styles.titleInput}
           placeholder="填写标题后更吸引人哦~"
+          value={title}
+          onChangeText={(text) => setTitle(text)}
         />
         <TextInput
           style={styles.contentInput}
           placeholder="添加正文"
+          value={content}
           multiline={true}
+          onChangeText={(text) => setContent(text)}
           onContentSizeChange={event => {
             setHeight(event.nativeEvent.contentSize.height)
         }}
         />
-        {/* <Input
-          style={styles.contentInput}
-          placeholder="Comment"
-          multiline={true}
-          leftIcon={{ type: 'font-awesome', name: 'comment' }}
-          onChangeText={value => this.setState({ comment: value })}
-        /> */}
       </ScrollView>
-      <TouchableOpacity style={styles.inboxContainer} onPress={() => navigation.goBack()}>
+      <TouchableOpacity style={styles.inboxContainer} onPress={handleDraft}>
         <View style={styles.iconContainer}>
           <AntDesign name="inbox" size={24} color="black" style={styles.inboxIcon} />
         </View>
         <Text style={styles.inboxText}>存草稿</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.publishBtn} onPress={() => navigation.goBack()}>
+      <TouchableOpacity style={styles.publishBtn} onPress={handlePublish}>
         <Text style={styles.postText}>发布游记</Text>
       </TouchableOpacity>
     </View>  
@@ -91,20 +186,42 @@ const styles = StyleSheet.create({
   goBackButton: {
     padding: 10,
   },
-  addImageContainer: {
+  imageList: {
+    width: hp("12%"),
+    height: hp("15%"),
+    resizeMode: "contain",
+    marginLeft: 20,
+    marginRight: -10,
+    // borderColor: "gray",
+    // borderWidth: 2,
+    // borderRadius: 10,
+  },
+  imageListContainer: {
     width: wp("100%"),
     height: hp("15%"),
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    // flexWrap: "wrap",
     // justifyContent: "center",
     // alignItems: "center",
     // borderColor: "black",
     // borderWidth: 2,
   },
+  // addImageContainer: {
+  //   width: wp("100%"),
+  //   height: hp("15%"),
+  //   // justifyContent: "center",
+  //   // alignItems: "center",
+  //   // borderColor: "black",
+  //   // borderWidth: 2,
+  // },
   addImage: {
     // flex: 1,
     width: hp("15%"),
     height: hp("15%"),
     resizeMode: "contain",
     marginLeft: 20,
+    marginRight: -10,
     borderColor: "gray",
     borderWidth: 2,
     borderRadius: 10,

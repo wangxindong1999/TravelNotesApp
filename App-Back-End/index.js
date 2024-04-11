@@ -3,11 +3,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const Users = require('./routers/usersModel');
-const Post = require('./routers/postsModel');
+const Posts = require('./routers/postsModel');
 const myInfo=require('./routers/myInfo')
 const indexList=require('./routers/indexList')
 const search=require('./routers/search')
-const Posts = require('./routers/postsModel');
 const person=require('./routers/person')
 require('dotenv').config();
 const uri = process.env.MONGODB_URI;

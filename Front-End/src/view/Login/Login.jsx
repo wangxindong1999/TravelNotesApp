@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, TextInput, Image, StyleSheet, Text, TouchableOpacity, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -7,9 +7,20 @@ import { Feather } from '@expo/vector-icons';
 export default function Login() {
   const navigation = useNavigation()
   const [username, setUsername] = useState("")
+  const [userImg, setUserImg] = useState("")
   const [password, setPassword] = useState("")
   const [isLogin, setIsLogin] = useState(false)
   const [hidePassword, setHidePassword] = useState(true)
+
+  // useEffect(() => {
+  //   const fetchUser = async () => { 
+  //     const username = await AsyncStorage.getItem("username");
+  //     const userImg = await AsyncStorage.getItem("userImg");
+  //     setUsername(username);
+  //     setUserImg(userImg);
+  //   }
+  //   fetchUser();
+  // }, [])
 
   async function handleLogin() {
     const response = await fetch("http://10.0.2.2:3000/login", {
@@ -25,6 +36,10 @@ export default function Login() {
     const data = await response.json()
 
     if (response.ok) {
+      // 获取用户头像
+      const user = await data.user;
+      // await AsyncStorage.setItem("username", user.username);
+      // await AsyncStorage.setItem("userImg", user.userImg);
       alert("登录成功")
       navigation.navigate("Home")
     } else {
