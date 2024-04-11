@@ -12,7 +12,7 @@ export default function Login() {
   const [hidePassword, setHidePassword] = useState(true)
 
   async function handleRegister() {
-    const response = await fetch("http://10.0.2.2:3000/register", {
+    const response = await fetch("http://10.0.2.2:3000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -39,37 +39,72 @@ class CardList extends Component {
     }, 3000)
   }
 
-  loadData = (page = 1, refreshing) => {
+  loadData = async (page = 1, refreshing) => {
     if (this.loading) {
-      return
+      return;
     }
-    this.loading = true
+    this.loading = true;
     if (refreshing) {
       this.setState({
         refreshing: true
-      })
-    } 
-    setTimeout(() => { // mock request data
-      const newData = imgList.slice((page - 1) * this.pageSize, page * this.pageSize).map(img => {
-        const { width, height } = img
-        const cardWidth = Math.floor(window.width / 2)
-        return {
-          ...img, 
-          width: cardWidth,
-          height: Math.floor(height / width * cardWidth)
+      });
+    }
+    try {
+      const response = await fetch("http://10.0.2.2:3000/myInfo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentPage: page,
+          pageSize: this.pageSize,
+          searchText:'',
+          activeIndex:activeIndex,
+        })
+      });
+  
+      if (response.ok) {
+        const cardList = await response.json();
+        if (cardList.length !== 0) {
+          const newData = cardList.map(item => {
+            const width = item.images.width;
+            const height = item.images.height;
+            const thumbURL=item.images.thumbURL;
+            const id=item.reviewer_id;
+            const username=item.username;
+            const userImg=item.userImg;
+            const cardWidth = Math.floor(window.width / 2);
+            const title=item.title;
+            return {
+              width: cardWidth,
+              height: Math.floor((height / width) * cardWidth),
+              thumbURL:thumbURL,
+              id:id,
+              userImg:userImg,
+              username:username,
+              title:title
+            };
+          });
+  
+          const noMore = newData.length < this.pageSize;
+          this.loading = false;
+          this.page = refreshing ? 1 : page;
+          this.setState({
+            data: refreshing ? newData : this.state.data.concat(newData),
+            refreshing: false,
+            noMore,
+            inited: true
+          });
+        } else {
+          alert("到底了！");
         }
-      })
-      const noMore = newData.length < this.pageSize
-      this.loading = false
-      this.page = refreshing ? 1 : page
-      this.setState({
-        data: refreshing ? newData : this.state.data.concat(newData),
-        refreshing: false,
-        noMore,
-        inited: true
-      })
-    }, refreshing ? 1000 : 500)
-  }
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      // 处理错误，例如显示错误信息给用户
+    }
+  };
+  
 
   onEndReached = () => {
     if (!this.state.noMore) {

@@ -4,6 +4,9 @@ const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const Users = require('./routers/usersModel');
 const Post = require('./routers/postsModel');
+const myInfo=require('./routers/myInfo')
+const indexList=require('./routers/indexList')
+const search=require('./routers/search')
 require('dotenv').config();
 const uri = process.env.MONGODB_URI;
 
@@ -18,6 +21,9 @@ mongoose.connect(uri)
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(indexList);
+app.use(search);
+app.use(myInfo);
 
 // 注册
 app.post('/register', async function (req, res) {

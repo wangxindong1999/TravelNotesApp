@@ -1,9 +1,11 @@
 import { PureComponent, Component } from 'react'
 import { View, Dimensions, Image, Animated, ImageProps, ActivityIndicator, Text, Platform, TouchableOpacity, Alert } from 'react-native'
 import WaterfallFlow from 'react-native-waterfall-flow'
-import imgList from './imgList'
+import { connect } from 'react-redux';
+
 
 const window = Dimensions.get('window')
+
 
 export default class TestWaterfallFlowScreen extends Component {
 
@@ -23,53 +25,87 @@ export default class TestWaterfallFlowScreen extends Component {
   }
 
   componentDidMount() {
-
-    this.loadData(1)
-
-    setTimeout(() => { // test WaterfallFlow's methods
-      // this.listRef.scrollToIndex({ index: 6 })
-      // this.listRef.scrollToEnd()
-      // this.listRef.scrollToOffset({ offset: 200 })
-    }, 3000)
+    this.loadData(1);
+  }
+  
+  componentDidUpdate(prevProps) {
+    // 当 searchText 发生变化时重新请求数据
+    if (this.props.searchText !== prevProps.searchText) {
+      this.loadData(1);
+    }
   }
 
-  loadData = (page = 1, refreshing) => {
+  loadData = async (page = 1, refreshing) => {
     if (this.loading) {
-      return
+      return;
     }
-    this.loading = true
+    this.loading = true;
     if (refreshing) {
       this.setState({
         refreshing: true
-      })
-    } 
-    setTimeout(() => { // mock request data
-      const newData = imgList.slice((page - 1) * this.pageSize, page * this.pageSize).map(img => {
-        const { width, height } = img
-        const cardWidth = Math.floor(window.width / 2)
-        return {
-          ...img, 
-          width: cardWidth,
-          height: Math.floor(height / width * cardWidth)
+      });
+    }
+    try {
+      const response = await fetch("http://10.0.2.2:3000/indexList", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentPage: page,
+          pageSize: this.pageSize,
+          searchText:''
+        })
+      });
+  
+      if (response.ok) {
+        const cardList = await response.json();
+        if (cardList.length !== 0) {
+          const newData = cardList.map(item => {
+            const width = item.images.width;
+            const height = item.images.height;
+            const thumbURL=item.images.thumbURL;
+            const id=item.reviewer_id;
+            const username=item.username;
+            const userImg=item.userImg;
+            const cardWidth = Math.floor(window.width / 2);
+            const title=item.title;
+            return {
+              width: cardWidth,
+              height: Math.floor((height / width) * cardWidth),
+              thumbURL:thumbURL,
+              id:id,
+              userImg:userImg,
+              username:username,
+              title:title
+            };
+          });
+  
+          const noMore = newData.length < this.pageSize;
+          this.loading = false;
+          this.page = refreshing ? 1 : page;
+          this.setState({
+            data: refreshing ? newData : this.state.data.concat(newData),
+            refreshing: false,
+            noMore,
+            inited: true
+          });
+        } else {
+          alert("到底了！");
         }
-      })
-      const noMore = newData.length < this.pageSize
-      this.loading = false
-      this.page = refreshing ? 1 : page
-      this.setState({
-        data: refreshing ? newData : this.state.data.concat(newData),
-        refreshing: false,
-        noMore,
-        inited: true
-      })
-    }, refreshing ? 1000 : 500)
-  }
-
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      // 处理错误，例如显示错误信息给用户
+    }
+  };
+  
   onEndReached = () => {
     if (!this.state.noMore) {
-      this.loadData(this.page + 1)
+      this.loadData(this.page + 1);
     }
-  }
+  };
+  
 
   render() {
     const { data, refreshing, noMore, inited } = this.state
@@ -77,7 +113,6 @@ export default class TestWaterfallFlowScreen extends Component {
       <WaterfallFlow
         ref={ref => this.listRef = ref}
         style={{ width:'95%',alignSelf:'center'}}
-        // contentContainerStyle={{ backgroundColor: '#EDF8EF' }}
         ListHeaderComponent={null}
         ListFooterComponent={<Footer noMore={noMore} inited={inited} isEmpty={data.length === 0}/>}
         ListEmptyComponent={<Empty inited={inited} />}
@@ -185,3 +220,5 @@ class FadeImage extends Component<ImageProps> {
     )
   }
 }
+
+// export default connect(mapStateToProps)(TestWaterfallFlowScreen);
