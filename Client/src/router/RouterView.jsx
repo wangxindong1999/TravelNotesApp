@@ -42,7 +42,11 @@ const fn = (routes) => {
         <Route
           key={index}
           path={item.path}
-          element={<Element {...item}></Element>}
+          element={
+            <Suspense>
+              <Element {...item}></Element>
+            </Suspense>
+          }
         ></Route>
       )
     } else {
@@ -50,7 +54,11 @@ const fn = (routes) => {
         <Route
           key={index}
           path={item.path}
-          element={<Element {...item}></Element>}
+          element={
+            <Suspense>
+              <Element {...item}></Element>
+            </Suspense>
+          }
         >
           {fn(item.children)}
         </Route>
@@ -60,11 +68,7 @@ const fn = (routes) => {
 }
 const RouterView = (props) => {
   let { routes } = props
-  return (
-    <Suspense>
-      <Routes>{fn(routes)}</Routes>
-    </Suspense>
-  )
+  return <Routes>{fn(routes)}</Routes>
 }
 
 export default RouterView
