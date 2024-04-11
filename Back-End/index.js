@@ -22,7 +22,8 @@ app.use(
     cookie: { maxAge: 60 * 1000 * 10, secure: false, httpOnly: false },
     rolling: false,
     store: MongoStore.create({
-      mongoUrl: "mongodb+srv://admin:admin@ctrip.e8joe2r.mongodb.net/?retryWrites=true&w=majority&appName=Ctrip",
+      mongoUrl:
+        "mongodb+srv://admin:admin@ctrip.e8joe2r.mongodb.net/?retryWrites=true&w=majority&appName=Ctrip",
       ttl: 1000 * 60 * 10,
     }),
   })
@@ -30,29 +31,33 @@ app.use(
 
 app.all("*", function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*")
-  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  )
   res.setHeader("Access-Control-Allow-Credentials", "true")
   next()
 })
 
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: "50mb" }))
 app.use(userRouter)
 app.use(taskRouter)
 app.use(cardList)
 
-mongoose.connect('mongodb+srv://admin:admin@ctrip.e8joe2r.mongodb.net/test?retryWrites=true&w=majority&appName=Ctrip', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect(
+  "mongodb+srv://admin:admin@ctrip.e8joe2r.mongodb.net/test?retryWrites=true&w=majority&appName=Ctrip",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+)
 
 const db = mongoose.connection
 
 // 连接
 db.once("open", () => {
-  console.log("Database connection successful");
-});
-
-
+  console.log("Database connection successful")
+})
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)

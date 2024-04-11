@@ -10,7 +10,6 @@ import ImgSource from "../assets/index"
 import Search from "../view/Home/search"
 import Person from "../view/MyInfo/person"
 
-
 //路由配置
 const routes = [
   {
@@ -49,12 +48,12 @@ const routes = [
     ],
   },
   {
-    name:"Search",
-    component:Search,
+    name: "Search",
+    component: Search,
   },
   {
-    name:"Person",
-    component:Person,
+    name: "Person",
+    component: Person,
     options: {
       title: "个人中心",
     },
@@ -71,7 +70,7 @@ const routes = [
     component: Login,
   },
   {
-    name: "Register", 
+    name: "Register",
     options: {
       headerShown: false,
     },
