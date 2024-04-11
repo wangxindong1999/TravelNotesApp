@@ -1,12 +1,22 @@
+import Welcome from "../view/Welcome/Welcome"
 import Home from "../view/Home/Home"
-import About from "../view/Login/Login"
+import Login from "../view/Login/Login"
+import Register from "../view/Login/Register"
 import AddTrade from "../view/AddTrade/AddTrade"
 import MyInfo from "../view/MyInfo/MyInfo"
+import Details from "../view/Details/Details"
 import { Text, Image, View } from "react-native"
 import ImgSource from "../assets/index"
 
 //路由配置
 const routes = [
+  {
+    name: "Welcome", //欢迎页
+    component: Welcome,
+    options: {
+      headerShown: false,
+    },
+  },
   {
     name: "Home", //首页
     // component: Home,
@@ -26,14 +36,6 @@ const routes = [
         },
       },
       {
-        name: "AddTrade",
-        component: AddTrade,
-        options: {
-          headerShown: false,
-          title: "",
-        },
-      },
-      {
         name: "MyInfo",
         component: MyInfo,
         options: {
@@ -45,7 +47,32 @@ const routes = [
   },
   {
     name: "Login", //可以暂设为登录路由
-    component: About,
+    options: {
+      headerShown: false,
+    },
+    component: Login,
+  },
+  {
+    name: "Register", 
+    options: {
+      headerShown: false,
+    },
+    component: Register,
+  },
+  {
+    name: "Details",
+    options: {
+      headerShown: false,
+    },
+    component: Details,
+  },
+  {
+    name: "AddTrade",
+    component: AddTrade,
+    options: {
+      headerShown: false,
+      title: "",
+    },
   },
 ]
 // //图标选择函数
