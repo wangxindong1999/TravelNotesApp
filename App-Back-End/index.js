@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const Users = require('./routers/usersModel');
-const Post = require('./routers/postsModel');
+const Posts = require('./routers/postsModel');
 require('dotenv').config();
 const uri = process.env.MONGODB_URI;
 
@@ -35,7 +35,7 @@ app.post('/register', async function (req, res) {
         // 对密码进行哈希处理
         const hashedPassword = await bcrypt.hash(password, 10);
         
-        var newUser = new Users({
+        let newUser = new Users({
           username: username,
           password: hashedPassword
         });
@@ -75,10 +75,13 @@ app.post('/login', async function(req, res) {
         }
 
         // 检查用户头像是否存在
-        // if (!user.userImg) {
-        //   user.userImg = 'https://www.gravatar.com/avatar/?d=mp';
-        //   user.save();
-        // }
+        if (!user.userImg) {
+          user.userImg = 'https://www.gravatar.com/avatar/?d=mp';
+          user.save();
+        }
+
+        res.cookie('username', username)
+        res.cookie('userImg', user.userImg)
         
         return res.status(200).json({ message: 'Logged in successfully' });
       });
@@ -87,6 +90,31 @@ app.post('/login', async function(req, res) {
       return res.status(500).json({ message: 'Error logging in', err });
     }
   });
+
+// 游记
+app.post('/posts', async function(req, res) {
+    const title = req.body.title;
+    const content = req.body.content;
+    const images = req.body.images;
+    const status = req.body.status;
+    
+    try {
+      let newPost = new Posts({
+        title: title,
+        content: content,
+        images: images,
+        status: status
+      });
+  
+      await newPost.save();
+      
+      res.json({ message: 'Post created successfully' });
+    } catch(err) {
+      console.error('Error occurred during post creation:', err);
+      res.status(500).json({ message: 'Could not create post', error: err.message });
+    }
+}
+)
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
