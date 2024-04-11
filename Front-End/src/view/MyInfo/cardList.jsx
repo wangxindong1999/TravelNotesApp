@@ -30,10 +30,17 @@ class CardList extends Component {
 
   componentDidMount() {
 
-    this.loadData(1,refreshing,0)
+    this.loadData(1)
 
     setTimeout(() => { 
     }, 3000)
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.activeIndex !== prevProps.activeIndex) {
+        this.loadData(1,true); // 调用加载数据的函数
+        // console.log(25);
+    }
   }
 
   loadData = async (page = 1,refreshing) => {
@@ -48,6 +55,7 @@ class CardList extends Component {
     }
     try {
       const {activeIndex}=this.props;
+      console.log(activeIndex)
       const response = await fetch("http://10.0.2.2:3000/myInfo", {
         method: "POST",
         headers: {
@@ -56,7 +64,7 @@ class CardList extends Component {
         body: JSON.stringify({
           currentPage: page,
           pageSize: this.pageSize,
-          status:2,
+          status:activeIndex,
           username:this.username
         })
       });

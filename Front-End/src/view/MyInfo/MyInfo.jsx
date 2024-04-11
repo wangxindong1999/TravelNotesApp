@@ -14,14 +14,14 @@ export default function MyInfo(){
   const dispatch = useDispatch();
   const [username,setUsername]=useState()
   const [userImg,setUserImg]=useState()
-  const handlePress = (newIndex) => {
-    dispatch(setActiveIndex(newIndex));
+  const handlePress = async function(newIndex) {
+    await dispatch(setActiveIndex(newIndex));
     // if (this.childRef.current) {
-    //   this.childRef.current.loadData(1,false,newIndex);
-    // }else{
-    //   console.log(596);
+    //     this.childRef.current.loadData(1,true);
+    // } else {
+    //     console.log(596);
     // }
-  };
+};
   // useEffect(() => {
   //   console.log(activeIndex);
   // }, [activeIndex]);
@@ -36,7 +36,6 @@ export default function MyInfo(){
                 },
                 credentials: 'include' // 包含凭据（包括 cookie）
             });
-            console.log(response);
             if (response.ok) {
                 const person = await response.json();
                 setUsername(person.username);
@@ -60,8 +59,8 @@ export default function MyInfo(){
         <>
             <Image source={bkImage} style={{ height: '30%' }} />
             <Person userImg={userImg} username={username}/>
-            <ButtonGroup activeIndex={activeIndex} handlePress={handlePress} />
-            <CardList username='username' activeIndex={activeIndex} ref={this.childRef}/>
+            <ButtonGroup activeIndex={activeIndex} handlePress={handlePress.bind(this)} />
+            <CardList username='username' activeIndex={activeIndex} ref={childRef}/>
         </>
     ) : (
         <Text>请登录</Text>
