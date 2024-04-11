@@ -7,39 +7,51 @@ import { useNavigation } from "@react-navigation/native"
 
 
 export default function MyInfo(){
+  childRef = React.createRef();
   const bkImage={uri:'https://img1.baidu.com/it/u=1884825806,3687074543&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889'}
   
   const activeIndex = useSelector((state) => state.activeIndex.value);
   const dispatch = useDispatch();
-
+  const [username,setUsername]=useState()
+  const [userImg,setUserImg]=useState()
   const handlePress = (newIndex) => {
     dispatch(setActiveIndex(newIndex));
+    // if (this.childRef.current) {
+    //   this.childRef.current.loadData(1,false,newIndex);
+    // }else{
+    //   console.log(596);
+    // }
   };
   // useEffect(() => {
   //   console.log(activeIndex);
   // }, [activeIndex]);
-  const [userInfo, setUserInfo] = useState(1);
-//   useEffect(() => {
-//     fetch('http://10.0.2.2:3000/myInfo', {
-//         method: 'Post',
-//         headers: {
-//           'Content-Type': 'application/json',
-//           credentials: 'include' // 确保携带凭据（cookies）
-//         }
-//     })
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error('Network response was not ok');
-//         }
-//         return response.json();
-//     })
-//     .then(data => {
-//         setUserInfo(data);
-//     })
-//     .catch(error => {
-//         console.error('There was a problem with the fetch operation:', error);
-//     });
-// }, []);
+  const [userInfo, setUserInfo] = useState(false);
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await fetch("http://10.0.2.2:3000/person", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include' // 包含凭据（包括 cookie）
+            });
+            console.log(response);
+            if (response.ok) {
+                const person = await response.json();
+                setUsername(person.username);
+                setUserImg(person.userImg);
+                setUserInfo(true);
+            } else {
+                alert("请登录！");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    fetchData();
+}, []);
 
 
   return(
@@ -47,9 +59,9 @@ export default function MyInfo(){
     {userInfo ? (
         <>
             <Image source={bkImage} style={{ height: '30%' }} />
-            <Person />
+            <Person userImg={userImg} username={username}/>
             <ButtonGroup activeIndex={activeIndex} handlePress={handlePress} />
-            <CardList />
+            <CardList username='username' activeIndex={activeIndex} ref={this.childRef}/>
         </>
     ) : (
         <Text>请登录</Text>
@@ -59,13 +71,14 @@ export default function MyInfo(){
 }
 
 // 头像展示
-const Person =()=>{
+const Person =({userImg,username})=>{
+  // const tImage = { uri: userImg };
   const tImage={uri:'https://img1.baidu.com/it/u=2226443709,1655735334&fm=253&fmt=auto&app=120&f=JPEG?w=690&h=1226'}
   const navigation = useNavigation();
   return(
     <View style={{position:'relative'}}>
         <View style={{flexDirection:'row',alignItems:'center',padding:5,position:'absolute',bottom:-40,right:5}}>
-          <Text style={{fontSize:17,fontWeight:'bold',marginRight:5,marginTop:4}}>路西西</Text>
+          <Text style={{fontSize:17,fontWeight:'bold',marginRight:5,marginTop:4}}>{username}</Text>
           <TouchableOpacity onPress={()=>navigation.navigate('Person')}>
             <View style={{width: 50,height: 50,borderRadius: 25, overflow: 'hidden'}}>
                 <Image source={tImage} style={{ flex: 1,resizeMode: 'cover', width: null,height: null,}}></Image>

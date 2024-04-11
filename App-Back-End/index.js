@@ -3,14 +3,12 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const Users = require('./routers/usersModel');
-<<<<<<< HEAD
 const Post = require('./routers/postsModel');
 const myInfo=require('./routers/myInfo')
 const indexList=require('./routers/indexList')
 const search=require('./routers/search')
-=======
 const Posts = require('./routers/postsModel');
->>>>>>> 2185bfb590390b51b43a32509707eced4c602b2a
+const person=require('./routers/person')
 require('dotenv').config();
 const uri = process.env.MONGODB_URI;
 
@@ -28,6 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(indexList);
 app.use(search);
 app.use(myInfo);
+app.use(person);
 
 // 注册
 app.post('/register', async function (req, res) {

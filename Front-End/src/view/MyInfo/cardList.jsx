@@ -1,7 +1,6 @@
 import { PureComponent, Component,useState,useEffect } from 'react'
 import { View, Dimensions, Image, Animated, ImageProps, ActivityIndicator, Text, Platform, TouchableOpacity, Alert, Button } from 'react-native'
 import WaterfallFlow from 'react-native-waterfall-flow'
-import imgList from './imgList'
 import { connect } from 'react-redux';
 
 const window = Dimensions.get('window')
@@ -25,21 +24,19 @@ class CardList extends Component {
     this.page = 1
     this.pageSize = 10
     this.loading = false
-    this.listRef = null
+    this.listRef = null,
+    this.username=this.props.username
   }
 
   componentDidMount() {
 
-    this.loadData(1)
+    this.loadData(1,refreshing,0)
 
-    setTimeout(() => { // test WaterfallFlow's methods
-      // this.listRef.scrollToIndex({ index: 6 })
-      // this.listRef.scrollToEnd()
-      // this.listRef.scrollToOffset({ offset: 200 })
+    setTimeout(() => { 
     }, 3000)
   }
 
-  loadData = async (page = 1, refreshing) => {
+  loadData = async (page = 1,refreshing) => {
     if (this.loading) {
       return;
     }
@@ -50,6 +47,7 @@ class CardList extends Component {
       });
     }
     try {
+      const {activeIndex}=this.props;
       const response = await fetch("http://10.0.2.2:3000/myInfo", {
         method: "POST",
         headers: {
@@ -58,8 +56,8 @@ class CardList extends Component {
         body: JSON.stringify({
           currentPage: page,
           pageSize: this.pageSize,
-          searchText:'',
-          activeIndex:activeIndex,
+          status:2,
+          username:this.username
         })
       });
   
@@ -114,7 +112,6 @@ class CardList extends Component {
 
   render() {
     const { data, refreshing, noMore, inited} = this.state
-    const { activeIndex } = this.props;
     return (
       <WaterfallFlow
         ref={ref => this.listRef = ref}
