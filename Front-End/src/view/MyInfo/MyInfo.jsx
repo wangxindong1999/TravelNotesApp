@@ -15,17 +15,46 @@ export default function MyInfo(){
   const handlePress = (newIndex) => {
     dispatch(setActiveIndex(newIndex));
   };
-  useEffect(() => {
-    console.log(activeIndex);
-  }, [activeIndex]);
+  // useEffect(() => {
+  //   console.log(activeIndex);
+  // }, [activeIndex]);
+  const [userInfo, setUserInfo] = useState(1);
+//   useEffect(() => {
+//     fetch('http://10.0.2.2:3000/myInfo', {
+//         method: 'Post',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           credentials: 'include' // 确保携带凭据（cookies）
+//         }
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Network response was not ok');
+//         }
+//         return response.json();
+//     })
+//     .then(data => {
+//         setUserInfo(data);
+//     })
+//     .catch(error => {
+//         console.error('There was a problem with the fetch operation:', error);
+//     });
+// }, []);
+
 
   return(
-    <View style={styles.container} >
-      <Image source={bkImage} style={{height:'30%'}}></Image>
-        <Person />
-        <ButtonGroup activeIndex={activeIndex} handlePress={handlePress}/>
-        <CardList/>
-    </View>
+    <View style={styles.container}>
+    {userInfo ? (
+        <>
+            <Image source={bkImage} style={{ height: '30%' }} />
+            <Person />
+            <ButtonGroup activeIndex={activeIndex} handlePress={handlePress} />
+            <CardList />
+        </>
+    ) : (
+        <Text>请登录</Text>
+    )}
+  </View>
   )
 }
 
