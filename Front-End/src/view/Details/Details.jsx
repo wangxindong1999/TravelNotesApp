@@ -1,23 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { View, ScrollView, Image, StyleSheet, Text, TouchableOpacity, StatusBar } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-// import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
+import { useNavigation, useRoute } from "@react-navigation/native";
 import CarouselComponent from "./CarouselComponent";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Ionicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 
 export default function Details() {
-  const [images, setImages] = useState([
-    require("../../assets/1.jpg"),
-    require("../../assets/2.jpg"),
-    require("../../assets/3.jpg"),
-  ]);
-  const [activeSlide, setActiveSlide] = useState(0);
   const navigation = useNavigation();
+  const route = useRoute();
+  // const [images, setImages] = useState([
+  //   require("../../assets/1.jpg"),
+  //   require("../../assets/2.jpg"),
+  //   require("../../assets/3.jpg"),
+  // ]);
+  const [username, setUsername] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // 获取图片
+        const response = await axios.get(`http://10.0.2.2:3000/posts/${route.params.postId}`)
+        setImages(response.data.images.map(image => `data:image/jpeg;base64,${image.base64}`))
+
+        // 获取用户名和头像
+        const userId = response.data.user
+        const userResponse = await axios.get(`http://10.0.2.2:3000/users/${userId}`)
+        setUsername(userResponse.data.username)
+        setUserAvatar(`data:image/jpeg;base64,${userResponse.data.userImg}`)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, [])
+
+  const [activeSlide, setActiveSlide] = useState(0);
   const updateActiveSlide = index => {
     setActiveSlide(index);
   };
+
     return (
       <View style={styles.background}>
         <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
@@ -29,11 +54,11 @@ export default function Details() {
           </TouchableOpacity>
           {/* 用户头像 */}
           <Image
-            source={require("../../assets/头像.png")}
+            source={{uri: userAvatar}}
             style={styles.userImage}
           />
           {/* 用户名 */}
-          <Text style={styles.username}>用户名</Text>
+          <Text style={styles.username}>{username}</Text>
           {/* 分享按钮 */}
           <TouchableOpacity style={styles.shareButton}>
             <SimpleLineIcons name="share-alt" size={24} color="black" />
