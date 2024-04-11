@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom"
 import { deleteTravel } from "@/api/travels"
 import { useSelector } from "react-redux"
 
+import { LazyLoadImage } from "react-lazy-load-image-component"
+
 export default function TravelList(props) {
   const { id, imgUrl, title, content, flag } = props
   const [messageApi, contextHolder] = message.useMessage()
@@ -33,7 +35,8 @@ export default function TravelList(props) {
       <Row>
         <Col span={6}>
           <div id="travel-img">
-            <img src={imgUrl} alt="ceshi" />
+            <LazyLoadImage src={imgUrl} alt="Image Alt" />
+            {/* <img src={imgUrl} alt="ceshi" /> */}
           </div>
         </Col>
         <Col span={12}>

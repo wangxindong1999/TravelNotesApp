@@ -19,6 +19,10 @@ const basicRoutes = [
     path: "/register",
     component: lazy(() => import("../view/Register/Register")),
   },
+  {
+    path: "*",
+    component: lazy(() => import("../view/404/NotFound")),
+  },
 ]
 const otherRoutes = [
   {
