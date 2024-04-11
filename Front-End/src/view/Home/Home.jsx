@@ -9,22 +9,32 @@ import TestWaterfallFlowScreen from "./TestWaterfallFlowScreen"
 export default function Home() {
   const navigation = useNavigation();
   return (
-    <View style={styles.container}>
-      <StatusBar backgroundColor="transparent" barStyle="dark-content" translucent /> 
-        <View style={styles.contentContainer} >
-          <Title/>
-        </View>
-        <Button title="navigate to login" onPress={() => navigation.navigate('Login')}></Button>
-        <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button>
-        <TestWaterfallFlowScreen />
-        {/* <Button title="click me" onPress={() => navigation.navigate('Login')}></Button> */}
-    </View>
+    // <View style={styles.container}>
+    //   <StatusBar backgroundColor="transparent" barStyle="dark-content" translucent /> 
+    //     <View style={styles.contentContainer} >
+    //       <Title/>
+    //     </View>
+    //     {/* <Button title="navigate to login" onPress={() => navigation.navigate('Login')}></Button>
+    //     <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button> */}
+    //     <TestWaterfallFlowScreen />
+    //     {/* <Button title="click me" onPress={() => navigation.navigate('Login')}></Button> */}
+    // </View>
     // <SafeAreaView style={{backgroundColor: "green", flex: 1, paddingTop:StatusBar.currentHeight}}>
     //   <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
     //   <Text>Home</Text>
     //   <Button title="navigate to login" onPress={() => navigation.navigate('Login')}></Button>
     //   <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button>
     // </SafeAreaView>
+
+
+    <View style={{backgroundColor: "white", paddingTop:StatusBar.currentHeight}}>
+      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+      <Text>Home</Text>
+      <Button title="navigate to login" onPress={() => navigation.navigate('Login')}></Button>
+      <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button>
+      <Button title="navigate to addtrade" onPress={() => navigation.navigate('AddTrade')}></Button>
+      <Button title="navigate to welcome" onPress={() => navigation.navigate('Welcome')}></Button>
+    </View>
 
   )
 }

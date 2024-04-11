@@ -1,7 +1,7 @@
-import React, { useState } from "react"
-import { View, TextInput, Image, StyleSheet, Text, TouchableOpacity } from "react-native"
-import { useNavigation } from "@react-navigation/native"
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import React, { useState } from "react";
+import { View, TextInput, Image, StyleSheet, Text, TouchableOpacity, StatusBar } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Feather } from '@expo/vector-icons';
 
 export default function Login() {
@@ -11,9 +11,30 @@ export default function Login() {
   const [isLogin, setIsLogin] = useState(false)
   const [hidePassword, setHidePassword] = useState(true)
 
+  async function handleLogin() {
+    const response = await fetch("http://10.0.2.2:3000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    })
+    const data = await response.json()
+
+    if (response.ok) {
+      alert("登录成功")
+      navigation.navigate("Home")
+    } else {
+      alert(data.error)
+    }
+}
+
   return (
     <View style={styles.background}>
-      <View style={styles.welcomContainer}>
+      <View style={styles.welcomeContainer}>
         {/* <Text style={styles.welcomeText}>游记本</Text> */}
         <Image
           source={require("../../assets/welcomeText.png")}
@@ -44,12 +65,17 @@ export default function Login() {
             <Feather name={hidePassword ? 'eye-off' : 'eye'} size={24} color="black" />
           </TouchableOpacity>
         </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Home')}>
-            <Text style={styles.loginText}>登录</Text>
+        <View style={styles.textContainer}>
+          <TouchableOpacity style={styles.registerText} onPress={() => navigation.navigate('Register')}>
+            <Text style={{color: "gray", fontSize: 16}}>点击注册</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.registerButton} onPress={() => console.log("注册")}>
-            <Text style={styles.registerText}>注册</Text>
+          <TouchableOpacity style={styles.forgetPsw} onPress={() => console.log("忘记密码")}>
+            <Text style={{color: "gray", fontSize: 16}}>忘记密码</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.loginText}>登      录</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -63,8 +89,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
+    paddingTop: StatusBar.currentHeight,
   },
-  welcomContainer: {
+  welcomeContainer: {
     position: "absolute",
     width: "100%",
     height: hp("15%"),
@@ -91,6 +118,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: hp("40%"),
     top: hp("20%"),
+    position: "absolute",
     // borderColor: "black",
     // borderWidth: 10,
   },
@@ -113,12 +141,13 @@ const styles = StyleSheet.create({
   input: {
     width: wp("80%"),
     height: hp("6%"),
-    marginTop: 40,
-    paddingLeft: 10,
-    paddingRight: 20,
+    marginTop: hp("4%"),
+    paddingLeft: wp("3%"),
+    paddingRight: wp("15%"),
     borderWidth: 1,
     borderRadius: 10,
     borderColor: "gray",
+    fontSize: 18,
   },
   pwdContainer: {
     flexDirection: "row",
@@ -128,42 +157,65 @@ const styles = StyleSheet.create({
   },
   eye: {
     position: "absolute",
-    right: 10,
+    right: wp("3%"),
     // top: hp("3%") + 40,
     bottom: hp("3%") - 12,
     // borderColor: "gray",
     // borderWidth: 1,
   },
+  textContainer: {
+    flexDirection: "row",
+    marginTop: hp("1%"),
+    width: wp("80%"),
+    justifyContent: "space-between",
+    alignItems: "center",
+    // borderColor: "gray",
+    // borderWidth: 1,
+  },
+  registerText: {
+    // marginLeft: wp("10%")
+    // borderColor: "gray",
+    // borderWidth: 1,
+  },
+  forgetPsw: {
+    // position: "absolute",
+    // marginLeft: wp("50%")
+    // right: wp("10%"),
+    // borderColor: "gray",
+    // borderWidth: 1,
+  },
   buttonContainer: {
-    marginTop: 20,
+    marginTop: hp("2%"),
   },
   loginButton: {
+    borderColor: "green",
     borderWidth: 1,
     borderRadius: 10,
-    width: wp("20%"),
-    height: hp("5%"),
+    width: wp("80%"),
+    height: hp("6%"),
     margin: 5,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "green",
   },
   loginText: {
-    fontSize: 16,
+    fontSize: 20,
+    fontWeight: "bold",
     color: "white",
     paddingBottom: 2,
   },
-  registerButton: {
-    borderWidth: 1,
-    borderRadius: 10,
-    width: wp("20%"),
-    height: hp("5%"),
-    margin: 5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  registerText: {
-    fontSize: 16,
-    color: "black",
-    paddingBottom: 2,
-  },
+  // registerButton: {
+  //   borderWidth: 1,
+  //   borderRadius: 10,
+  //   width: wp("20%"),
+  //   height: hp("5%"),
+  //   margin: 5,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  // },
+  // registerText: {
+  //   fontSize: 16,
+  //   color: "black",
+  //   paddingBottom: 2,
+  // },
 })
