@@ -1,9 +1,12 @@
-import { Button, Form, Input, message } from "antd"
+import { Button, Form, Input, message, Flex, Upload } from "antd"
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"
 import "./Register.css"
 import { register as registerUser } from "@/api/user"
+import { useState } from "react"
 
 export default function Register(props) {
   const { navigate } = props
+  const [imageUrl, setImageUrl] = useState("")
   const [form] = Form.useForm()
   const [messageApi, contextHolder] = message.useMessage()
   const onFinish = (values) => {
@@ -40,7 +43,7 @@ export default function Register(props) {
       reviewer_id: "",
       createdAt: createDate,
       updatedAt: createDate,
-      userImg: "",
+      userImg: imageUrl,
     }
     registerUser({ ...data, ...values })
       .then((res) => {
@@ -71,6 +74,32 @@ export default function Register(props) {
       })
   }
 
+  const handleImgChange = (info) => {
+    console.log(info)
+    const reader = new FileReader()
+    reader.readAsDataURL(info.file.originFileObj)
+    reader.onload = (e) => {
+      setImageUrl(e.target.result)
+    }
+  }
+  const uploadButton = (
+    <button
+      style={{
+        border: 0,
+        background: "none",
+      }}
+      type="button"
+    >
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        图片上传
+      </div>
+    </button>
+  )
   return (
     <>
       {contextHolder}
@@ -129,6 +158,41 @@ export default function Register(props) {
               ]}
             >
               <Input.Password />
+            </Form.Item>
+            <Form.Item
+              label="头像上传"
+              name="imageUrl"
+              wrapperCol={{
+                offset: 6,
+                span: 16,
+              }}
+            >
+              <Flex>
+                <Upload
+                  name="avatar"
+                  listType="picture-circle"
+                  className="avatar-uploader"
+                  showUploadList={false}
+                  // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                  // beforeUpload={beforeUpload}
+                  customRequest={() => {}}
+                  onChange={handleImgChange}
+                >
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      alt="avatar"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  ) : (
+                    uploadButton
+                  )}
+                </Upload>
+              </Flex>
             </Form.Item>
             <Form.Item
               wrapperCol={{

@@ -9,6 +9,7 @@ import {
   message,
   Flex,
   Spin,
+  Image,
 } from "antd"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import "./Details.css"
@@ -177,18 +178,25 @@ export default function Details(props) {
           </section>
           <section className="detail-body">
             <Row
-              gutter={{
-                xs: 8,
-                sm: 16,
-                md: 24,
-                lg: 32,
-              }}
+              // gutter={{
+              //   xs: 8,
+              //   sm: 16,
+              //   md: 24,
+              //   lg: 32,
+              // }}
+              gutter={128}
               style={{ padding: "0 20px" }}
             >
               {travelDetail.imgUrl?.map((item, index) => {
                 return (
-                  <Col span={5} className="detail-body-img" key={index}>
-                    <img src={item} alt="" />
+                  <Col
+                    style={{ paddingTop: "10px" }}
+                    span={4}
+                    className="detail-body-img"
+                    key={index}
+                  >
+                    {/* <img src={item} alt="" /> */}
+                    <Image width={200} height={250} src={item} key={index} />
                   </Col>
                 )
               })}

@@ -17,6 +17,7 @@ export default function PageHeader() {
   const logOut = () => {
     dispatch(setUserInfo({}))
     Cookies.remove("Login")
+    sessionStorage.removeItem("currentPath")
     logout()
     nav("/login")
   }

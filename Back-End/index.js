@@ -35,8 +35,8 @@ app.all("*", function (req, res, next) {
   next()
 })
 
-app.use(bodyParser.json())
-app.use(userRouter)
+app.use(bodyParser.json({ limit: "50mb" }))
+app.use(usersRouter)
 app.use(taskRouter)
 app.use(cardList)
 

@@ -10,7 +10,6 @@ import {
 } from "@/api/travels"
 import { Pagination, Empty, Spin, Flex } from "antd"
 import { useSelector, useDispatch } from "react-redux"
-import { setTravelList } from "@/store/userSlice"
 const mapLsit = (travelData) => {
   return travelData.map((item, index) => {
     return (
@@ -35,7 +34,6 @@ const reflect = {
 }
 export default function Travel(props) {
   const store = useSelector((state) => state.user)
-  const dispatch = useDispatch()
   const { type } = props
   let [isShow, setisShow] = useState(true)
   const [currentPage, setcurrentPage] = useState(1)
