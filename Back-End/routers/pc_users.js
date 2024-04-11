@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const { MongoClient } = require("mongodb")
-const uri = "mongodb://127.0.0.1:27017"
+const uri = "mongodb+srv://admin:admin@ctrip.e8joe2r.mongodb.net/test?retryWrites=true&w=majority&appName=Ctrip"
 const client = new MongoClient(uri)
 const Base64 = require("js-base64").Base64
 const bcrypt = require("bcrypt")
