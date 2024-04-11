@@ -16,4 +16,4 @@ const postSchema = new mongoose.Schema({
   reason: { type: String },
 })
 
-module.exports = mongoose.model("Posts", postSchema)
+module.exports = mongoose.model("posts", postSchema)

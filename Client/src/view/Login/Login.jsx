@@ -7,23 +7,27 @@ import UserIcon from "@/components/Icon/UserIcon"
 import PasswordIcon from "@/components/Icon/PasswordIcon"
 import { useDispatch } from "react-redux"
 import { setUserInfo } from "@/store/userSlice"
+let isLogin = false
 export default function Login(props) {
   const { navigate } = props
   const dispatch = useDispatch()
   const [messageApi, contextHolder] = message.useMessage()
   const onFinishFailed = (errorInfo) => {}
   const onFinish = (values) => {
-    // values.password = Base64.encode(values.password)
+    if (isLogin) return
+    isLogin = true
     login(values)
       .then((res) => {
         if (res.status === 200) {
           dispatch(setUserInfo(res.data))
           navigate("/")
+          isLogin = true
         } else {
           messageApi.open({
             type: "error",
             content: "用户名或密码错误",
           })
+          isLogin = true
         }
       })
       .catch((err) => {
@@ -32,6 +36,8 @@ export default function Login(props) {
             type: "error",
             content: "密码错误",
           })
+          isLogin = true
+
           return
         }
         if (err.response.status === 404) {
@@ -39,6 +45,7 @@ export default function Login(props) {
             type: "error",
             content: "用户不存在",
           })
+          isLogin = true
           return
         }
       })
@@ -130,6 +137,7 @@ export default function Login(props) {
                     className="login-submit"
                     type="primary"
                     htmlType="submit"
+                    disabled={isLogin}
                   >
                     登录
                   </Button>

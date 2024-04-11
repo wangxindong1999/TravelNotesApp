@@ -65,6 +65,7 @@ img {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   overflow: hidden;
+  align-items: center;
 }

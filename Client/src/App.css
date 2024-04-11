@@ -1,0 +1,12 @@
+:root {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+body {
+  position: absolute;
+  width: calc(
+    100vw - 17px
+  ); /* 17px是我电脑当前分标率下滚动条的宽度，可自行设置宽度*/
+  overflow: hidden;
+}

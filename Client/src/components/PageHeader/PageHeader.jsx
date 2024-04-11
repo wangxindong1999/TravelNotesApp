@@ -23,6 +23,7 @@ export default function PageHeader() {
     sessionStorage.removeItem("currentPath")
     logout()
     nav("/login")
+    window.location.reload()
   }
   const items = [
     {
@@ -34,9 +35,13 @@ export default function PageHeader() {
     if (store.userInfo.username && Cookies.get("Login")) {
       setLoding(false)
     }
-    if (!store.userInfo.username && Cookies.get("Login")) {
+    if (!store.userInfo.userImg && Cookies.get("Login")) {
       getUserInfo().then((res) => {
-        console.log(res)
+        res.data.userImg = res.data.userImg.replace(
+          "dataimage/jpegbase64",
+          "data:image/png;base64,"
+        )
+        // dispatch(setUserInfo({ ...res.data, userImg: image }))
         dispatch(setUserInfo(res.data))
         setLoding(false)
       })

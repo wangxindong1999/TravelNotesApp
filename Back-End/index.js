@@ -5,11 +5,20 @@ const cookieParser = require("cookie-parser")
 const port = 3005
 const bodyParser = require("body-parser")
 const MongoStore = require("connect-mongo")
-
+const mongoose = require("mongoose")
 // Import routers
 const userRouter = require("./routers/pc_users")
 const taskRouter = require("./routers/pc_travels")
-
+const uri =
+  "mongodb+srv://admin:admin@ctrip.e8joe2r.mongodb.net/test?retryWrites=true&w=majority&appName=Ctrip"
+mongoose
+  .connect(uri)
+  .then(() => {
+    console.log("Database connection successful")
+  })
+  .catch((err) => {
+    console.error("Database connection error", err)
+  })
 app.use(cookieParser())
 app.use(
   session({

@@ -75,7 +75,6 @@ export default function Register(props) {
   }
 
   const handleImgChange = (info) => {
-    console.log(info)
     const reader = new FileReader()
     reader.readAsDataURL(info.file.originFileObj)
     reader.onload = (e) => {
@@ -173,8 +172,6 @@ export default function Register(props) {
                   listType="picture-circle"
                   className="avatar-uploader"
                   showUploadList={false}
-                  // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                  // beforeUpload={beforeUpload}
                   customRequest={() => {}}
                   onChange={handleImgChange}
                 >

@@ -13,7 +13,7 @@ export default function TravelList(props) {
   const nav = useNavigate()
   //路由跳转至详情页
   const toDetail = (id) => {
-    console.log("toDetail", id, flag)
+    // console.log("toDetail", id, flag)
     nav(`/details?id=${id}&flag=${flag}`)
   }
   //删除
@@ -64,7 +64,7 @@ export default function TravelList(props) {
           {store.userInfo.position === "管理者" ? (
             <div onClick={(e) => e.stopPropagation()}>
               <Popconfirm
-                description={`确认删除"${title}"吗`}
+                description={`确认删除该游记吗`}
                 onConfirm={delteConfirm.bind(null, id)}
                 onCancel={(e) => e.stopPropagation()}
                 okText="是"
