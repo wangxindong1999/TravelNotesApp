@@ -16,7 +16,7 @@ mongoose.connect(uri)
     });
 
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '10mb', extended: true}));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // 注册
@@ -97,13 +97,15 @@ app.post('/posts', async function(req, res) {
     const content = req.body.content;
     const images = req.body.images;
     const status = req.body.status;
+    const user = req.body.user;
     
     try {
       let newPost = new Posts({
         title: title,
         content: content,
         images: images,
-        status: status
+        status: status,
+        user: user,
       });
   
       await newPost.save();
