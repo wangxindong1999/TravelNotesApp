@@ -125,6 +125,9 @@ class CardList extends Component {
       this.loadData(this.page + 1)
     }
   }
+  // handleChildNavigate = () => {
+  //   this.props.navigation.navigate('Details');
+  // };
 
   render() {
     const { data, refreshing, noMore, inited} = this.state
@@ -144,7 +147,7 @@ class CardList extends Component {
         onRefresh={() => this.loadData(1, true)}
         renderItem={({ item, index, columnIndex }) => {
           return (
-            <ConnectedCard item={item} index={index} columnIndex={columnIndex}  />
+            <ConnectedCard item={item} index={index} columnIndex={columnIndex} />
           )
         }}
       />
@@ -170,7 +173,7 @@ class Card extends PureComponent {
             resizeMode="cover" 
           />
           <Text style={{fontWeight:500,padding:5}}>{item.title}</Text>
-          <ConnectedOperate  />
+          <ConnectedOperate />
           {activeIndex===2 &&
             <Text style={{color:'red',fontWeight:'600',paddingLeft:5,marginBottom:5}}>!{reason}</Text>
           }
@@ -215,7 +218,7 @@ class Operate extends PureComponent{
     // const {handleNavigate}=this.props;
     const { activeIndex } = this.props;
     // const {itemId} =this.props;
-    // return(
+    return(
       <View style={{flexDirection: 'row', alignItems: 'center',justifyContent: 'space-between',padding:5}}>
         {/* 分享 */}
         {activeIndex===0 &&
@@ -225,12 +228,12 @@ class Operate extends PureComponent{
         }
         {/* 编辑*/}
         {(activeIndex===1||activeIndex===2) &&
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('Details')}>
+        <TouchableOpacity onPress={()=>{console.log(activeIndex)}}>
           <Image source={require('../../assets/write.png')} style={{width:17,height:17}}></Image>
         </TouchableOpacity>
         }
         {/* 删除 */}
-        <TouchableOpacity onPress={console.log(265)}>
+        <TouchableOpacity onPress={()=>{console.log(265)}}>
           <Image source={require('../../assets/delete.png')} style={{width:20,height:20}}></Image>
         </TouchableOpacity>
         {/* 发布 */}
@@ -241,7 +244,7 @@ class Operate extends PureComponent{
         }
       </View>
     
-  }
+  )}
 }
 
 class Footer extends PureComponent {

@@ -2,28 +2,30 @@ import React from "react"
 import { Text,View,StyleSheet, TouchableOpacity,Image, Button} from "react-native"
 import { useNavigation } from "@react-navigation/native"
 
-export default function Title() {
+export default function Person({route}) {
+  const { username, userImg } = route.params;
+  console.log(username,userImg)
   const navigation = useNavigation();
   return (
     <View>
-       <TouchableOpacity onPress={() => {console.log(22)}}>
+       <TouchableOpacity onPress={() => navigation.navigate('UserDetails', { uname: username,uImg:userImg, index:'0' })}>
        <View style={styles.container}>
             <Text style={{fontSize:20}}>头像</Text>
                 <Image
-                  source={require('../../assets/person1.jpg')}
+                  source={userImg}
                   style={{ width: 40, height: 40 }}
                 />
         </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {console.log(22)}}>
+        <TouchableOpacity onPress={() => navigation.navigate('UserDetails', { uname: username,uImg:'', index:'1' })}>
         <View style={styles.container}>
             <Text style={{fontSize:20}}>名字</Text>
-            <Text style={{fontSize:18}}>路西西</Text>
+            <Text style={{fontSize:18}}>{username}</Text>
         </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {console.log(22)}}>
+        <TouchableOpacity onPress={() => navigation.navigate('UserDetails', { uname: username,uImg:'', index:'2' })}>
        <View style={styles.container}>
             <Text style={{fontSize:20}}>修改密码</Text>
                 <Image
