@@ -6,6 +6,8 @@ import CarouselComponent from "./CarouselComponent";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Ionicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../store/feature/userSlice';
 
 export default function Details() {
   const navigation = useNavigation();
@@ -16,6 +18,7 @@ export default function Details() {
   //   require("../../assets/2.jpg"),
   //   require("../../assets/3.jpg"),
   // ]);
+  const user = useSelector(selectUser);
   const [username, setUsername] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
   const [images, setImages] = useState([]);
