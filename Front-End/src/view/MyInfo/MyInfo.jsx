@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from "react";
 import {StyleSheet, View,Text,Image, Button,TouchableOpacity} from 'react-native'
-import CardList from "./cardList";
+  import CardList from "./cardList";
 import { useSelector, useDispatch } from 'react-redux';
 import { setActiveIndex } from '../../store/feature/activeIndexSlice';
 import { useNavigation } from "@react-navigation/native"
@@ -51,6 +51,7 @@ export default function MyInfo(){
 
     fetchData();
 }, []);
+const navigation = useNavigation(); // 使用 useNavigation 钩子获取导航属性
 
 
   return(
@@ -59,8 +60,9 @@ export default function MyInfo(){
         <>
             <Image source={bkImage} style={{ height: '30%' }} />
             <Person userImg={userImg} username={username}/>
+            <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button>
             <ButtonGroup activeIndex={activeIndex} handlePress={handlePress.bind(this)} />
-            <CardList username='username' activeIndex={activeIndex} ref={childRef}/>
+            <CardList username='username' activeIndex={activeIndex} navigation={navigation}/>
         </>
     ) : (
         <Text>请登录</Text>

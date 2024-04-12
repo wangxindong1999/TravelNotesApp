@@ -8,6 +8,7 @@ const myInfo=require('./routers/myInfo')
 const indexList=require('./routers/indexList')
 const search=require('./routers/search')
 const person=require('./routers/person')
+const deletePost=require('./routers/deletePost')
 require('dotenv').config();
 const uri = process.env.MONGODB_URI;
 
@@ -26,6 +27,7 @@ app.use(indexList);
 app.use(search);
 app.use(myInfo);
 app.use(person);
+app.use(deletePost);
 
 // 注册
 app.post('/register', async function (req, res) {
