@@ -38,7 +38,7 @@ const CarouselComponent = ({images, updateActiveSlide, activeSlide}) => {
             backgroundColor: 'rgba(0, 0, 0, 0.5)'
           }}
           inactiveDotStyle={{
-            // Define styles for inactive dots here
+            
           }}
           inactiveDotOpacity={0.4}
           inactiveDotScale={0.6}

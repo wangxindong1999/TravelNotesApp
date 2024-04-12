@@ -88,6 +88,7 @@ app.post('/login', async function(req, res) {
           user.save();
         }
 
+        res.cookie('userId', user._id.toString())
         res.cookie('username', username)
         res.cookie('userImg', user.userImg)
         
