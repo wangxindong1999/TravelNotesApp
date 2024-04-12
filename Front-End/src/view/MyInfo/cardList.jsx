@@ -189,7 +189,8 @@ class Card extends PureComponent {
           onPress={() => {
             console.log(activeIndex)
             console.log(this.props.navigation)
-            this.props.navigation.navigate("Homes")
+            console.log(item.id)
+            this.props.navigation.navigate("Details",{itemId:item.id})
           }}
         >
           <Image
@@ -202,7 +203,7 @@ class Card extends PureComponent {
           />
 
           <Text style={{ fontWeight: 500, padding: 5 }}>{item.title}</Text>
-          <ConnectedOperate navigation={this.props.navigation} />
+          <ConnectedOperate navigation={this.props.navigation} item={item}/>
           {activeIndex === 2 && (
             <Text
               style={{
@@ -226,6 +227,7 @@ class Operate extends PureComponent {
   deleteItem = async (id) => {
     console.log(id, "id")
     try {
+      // http://10.0.2.2:3000/deletePost
       const response = await fetch("http://10.0.2.2:3000/deletePost", {
         method: "POST",
         headers: {
@@ -245,20 +247,13 @@ class Operate extends PureComponent {
     }
   }
 
-  handleNavigation = () => {
-    // const { navigation } = this.props;
-    // // 在这里执行导航操作
-    // navigation.navigate('Details'); // 以 'Profile' 为例
-    console.log(2555)
-  }
-
   render() {
-    // const {handleNavigate}=this.props;
+    // console.log(this.props.item.id)
     const { activeIndex } = this.props
-    // const {itemId} =this.props;
+    // console.log(activeIndex);
 
-    // return(
-    ;<View
+    return(
+    <View
       style={{
         flexDirection: "row",
         alignItems: "center",
@@ -282,7 +277,7 @@ class Operate extends PureComponent {
       {/* 编辑*/}
       {(activeIndex === 1 || activeIndex === 2) && (
         <TouchableOpacity
-          onPress={() => this.props.navigation.navigate("Details")}
+          onPress={() => this.props.navigation.navigate("Details",{itemId:this.props.item.id})}
         >
           <Image
             source={require("../../assets/write.png")}
@@ -291,7 +286,7 @@ class Operate extends PureComponent {
         </TouchableOpacity>
       )}
       {/* 删除 */}
-      <TouchableOpacity onPress={console.log(265)}>
+      <TouchableOpacity onPress={()=>{this.deleteItem(this.props.item.id)}}>
         <Image
           source={require("../../assets/delete.png")}
           style={{ width: 20, height: 20 }}
@@ -311,7 +306,7 @@ class Operate extends PureComponent {
           <Text style={{ color: "#fff" }}>发布</Text>
         </View>
       )}
-    </View>
+    </View>)
   }
 
 }
@@ -361,33 +356,6 @@ class Empty extends PureComponent {
   }
 }
 
-class FadeImage extends Component<ImageProps> {
-  constructor(props) {
-    super(props)
-    this._animatedValue = new Animated.Value(0)
-  }
-
-  render() {
-    const { style, onLoadEnd } = this.props
-    if (Platform.OS === "android") {
-      return <Image {...this.props} />
-    }
-    return (
-      <Animated.Image
-        {...this.props}
-        onLoadEnd={() => {
-          Animated.timing(this._animatedValue, {
-            toValue: 1,
-            duration: 200,
-            useNativeDriver: true,
-          }).start()
-          onLoadEnd && onLoadEnd()
-        }}
-        style={[style, { opacity: this._animatedValue }]}
-      />
-    )
-  }
-}
 
 const ConnectedCard = connect(mapStateToProps)(Card)
 const ConnectedOperate = connect(mapStateToProps)(Operate)

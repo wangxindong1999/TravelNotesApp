@@ -192,33 +192,5 @@ class Empty extends PureComponent {
   }
 }
 
-class FadeImage extends Component<ImageProps> {
-
-  constructor(props) {
-    super(props)
-    this._animatedValue = new Animated.Value(0)
-  }
-
-  render() {
-    const { style, onLoadEnd } = this.props
-    if (Platform.OS === 'android') {
-      return <Image {...this.props}/>
-    }
-    return (
-      <Animated.Image 
-        {...this.props}
-        onLoadEnd={() => {
-          Animated.timing(this._animatedValue, {
-            toValue: 1,
-            duration: 200,
-            useNativeDriver: true
-          }).start()
-          onLoadEnd && onLoadEnd()
-        }}
-        style={[style, { opacity: this._animatedValue }]} 
-      />
-    )
-  }
-}
 
 // export default connect(mapStateToProps)(TestWaterfallFlowScreen);

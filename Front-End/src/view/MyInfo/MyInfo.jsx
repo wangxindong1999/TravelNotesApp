@@ -62,7 +62,7 @@ const navigation = useNavigation(); // 使用 useNavigation 钩子获取导航�
             <Person userImg={userImg} username={username}/>
             {/* <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button> */}
             <ButtonGroup activeIndex={activeIndex} handlePress={handlePress.bind(this)} />
-            <CardList username='username' activeIndex={activeIndex} />
+            <CardList username='username' activeIndex={activeIndex} navigation={navigation}/>
         </>
     ) : (
         <Text>请登录</Text>

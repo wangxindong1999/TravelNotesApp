@@ -11,7 +11,7 @@ const imageSchema = new mongoose.Schema({
 
 
 const postSchema = new mongoose.Schema({
-  _id: {type: String},
+  _id: {type: String,require:true},
   user: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
   title: {type: String, required: true},
   content: {type: String, required: true},
