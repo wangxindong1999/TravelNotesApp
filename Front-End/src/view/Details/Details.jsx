@@ -10,6 +10,7 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 export default function Details() {
   const navigation = useNavigation();
   const route = useRoute();
+  const postId = route.params.itemId;
   // const [images, setImages] = useState([
   //   require("../../assets/1.jpg"),
   //   require("../../assets/2.jpg"),
@@ -23,7 +24,7 @@ export default function Details() {
     const fetchData = async () => {
       try {
         // 获取图片
-        const response = await axios.get(`http://10.0.2.2:3000/posts/${route.params.postId}`)
+        const response = await axios.get(`http://10.0.2.2:3000/posts/${postId}`)
         setImages(response.data.images.map(image => `data:image/jpeg;base64,${image.base64}`))
 
         // 获取用户名和头像

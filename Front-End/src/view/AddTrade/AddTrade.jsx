@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { selectUser, logout } from "../../store/feature/userSlice"
 import { Button, Input } from "@rneui/themed"
@@ -8,9 +8,12 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
+import { Dimensions } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 
 export default function AddTrade() {
+  const [isScrollEnabled, setIsScrollEnabled] = useState(true);
+  const contentWidth = useRef(0);
   const navigation = useNavigation()
   const [height, setHeight] = useState(0);
   // const dispatch = useDispatch()
@@ -26,6 +29,14 @@ export default function AddTrade() {
   //   }
   // }, [user])
 
+  const onContentLayout = (e) => {
+    const { width } = e.nativeEvent.layout;
+    const screenWidth = Dimensions.get('window');
+    contentWidth.current = width;
+    // console.log(contentWidth.current, screenWidth.width);
+    setIsScrollEnabled(contentWidth.current > 0.8 * screenWidth.width);  
+  }
+
   // 添加图片
   const handleSelectImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -36,7 +47,7 @@ export default function AddTrade() {
       base64: true,
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (!result.canceled) {
       // setImages(result.assets[0].base64);
@@ -130,8 +141,8 @@ export default function AddTrade() {
       </View>
 
       <ScrollView style={{width: wp("100%"), height: hp("15%")}}>
-        <ScrollView style={{width: "100%"}} horizontal={true} showsHorizontalScrollIndicator={true}>
-          <View style={styles.imageListContainer}>
+        <ScrollView style={{width: "100%", marginLeft: 20}} horizontal={true} scrollEnabled={isScrollEnabled} showsHorizontalScrollIndicator={false}>
+          <View style={styles.imageListContainer} onLayout={onContentLayout}>
             {renderImages()}
             <TouchableOpacity style={styles.addImageContainer} onPress={handleSelectImage}>
               <Image
@@ -190,37 +201,39 @@ const styles = StyleSheet.create({
     width: hp("12%"),
     height: hp("15%"),
     resizeMode: "contain",
-    marginLeft: 20,
-    marginRight: -10,
+    // marginLeft: 20,
+    marginRight: 0,
     // borderColor: "gray",
     // borderWidth: 2,
     // borderRadius: 10,
   },
   imageListContainer: {
-    width: wp("100%"),
+    // width: wp("500%"),
+    
     height: hp("15%"),
     flexDirection: "row",
     justifyContent: "flex-start",
+    marginRight: 20,
     // flexWrap: "wrap",
     // justifyContent: "center",
     // alignItems: "center",
     // borderColor: "black",
     // borderWidth: 2,
   },
-  // addImageContainer: {
-  //   width: wp("100%"),
-  //   height: hp("15%"),
-  //   // justifyContent: "center",
-  //   // alignItems: "center",
-  //   // borderColor: "black",
-  //   // borderWidth: 2,
-  // },
+  addImageContainer: {
+    width: hp("15%"),
+    height: hp("15%"),
+    // justifyContent: "center",
+    // alignItems: "center",
+    // borderColor: "black",
+    // borderWidth: 2,
+  },
   addImage: {
     // flex: 1,
     width: hp("15%"),
     height: hp("15%"),
     resizeMode: "contain",
-    marginLeft: 20,
+    // marginLeft: 20,
     marginRight: -10,
     borderColor: "gray",
     borderWidth: 2,
