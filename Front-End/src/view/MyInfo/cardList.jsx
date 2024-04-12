@@ -131,6 +131,9 @@ class CardList extends Component {
       this.loadData(this.page + 1)
     }
   }
+  // handleChildNavigate = () => {
+  //   this.props.navigation.navigate('Details');
+  // };
 
   render() {
     const { data, refreshing, noMore, inited } = this.state
@@ -152,12 +155,14 @@ class CardList extends Component {
         onRefresh={() => this.loadData(1, true)}
         renderItem={({ item, index, columnIndex }) => {
           return (
+
             <ConnectedCard
               item={item}
               index={index}
               columnIndex={columnIndex}
               navigation={this.props.navigation}
             />
+
           )
         }}
       />
@@ -195,6 +200,7 @@ class Card extends PureComponent {
             }}
             resizeMode="cover"
           />
+
           <Text style={{ fontWeight: 500, padding: 5 }}>{item.title}</Text>
           <ConnectedOperate navigation={this.props.navigation} />
           {activeIndex === 2 && (
@@ -209,6 +215,7 @@ class Card extends PureComponent {
               !{reason}
             </Text>
           )}
+
         </TouchableOpacity>
       </View>
     )
@@ -249,6 +256,7 @@ class Operate extends PureComponent {
     // const {handleNavigate}=this.props;
     const { activeIndex } = this.props
     // const {itemId} =this.props;
+
     // return(
     ;<View
       style={{
@@ -305,6 +313,7 @@ class Operate extends PureComponent {
       )}
     </View>
   }
+
 }
 
 class Footer extends PureComponent {

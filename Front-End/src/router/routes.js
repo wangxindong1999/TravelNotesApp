@@ -9,6 +9,7 @@ import { Text, Image, View } from "react-native"
 import ImgSource from "../assets/index"
 import Search from "../view/Home/search"
 import Person from "../view/MyInfo/person"
+import UserDetails from "../view/MyInfo/userDetails"
 
 //路由配置
 const routes = [
@@ -65,6 +66,14 @@ const routes = [
     options: {
       title: "个人中心",
     },
+  },
+    {
+      name: "UserDetails",
+      component: UserDetails,
+      options: {
+        headerShown: false,
+        title: "",
+      },
   },
   // {
   //   name:"Details",

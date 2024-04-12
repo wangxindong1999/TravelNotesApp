@@ -60,9 +60,9 @@ const navigation = useNavigation(); // 使用 useNavigation 钩子获取导航�
         <>
             <Image source={bkImage} style={{ height: '30%' }} />
             <Person userImg={userImg} username={username}/>
-            <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button>
+            {/* <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button> */}
             <ButtonGroup activeIndex={activeIndex} handlePress={handlePress.bind(this)} />
-            <CardList username='username' activeIndex={activeIndex} navigation={navigation}/>
+            <CardList username='username' activeIndex={activeIndex} />
         </>
     ) : (
         <Text>请登录</Text>
@@ -73,14 +73,15 @@ const navigation = useNavigation(); // 使用 useNavigation 钩子获取导航�
 
 // 头像展示
 const Person =({userImg,username})=>{
+  const uname=username;
   // const tImage = { uri: userImg };
   const tImage={uri:'https://img1.baidu.com/it/u=2226443709,1655735334&fm=253&fmt=auto&app=120&f=JPEG?w=690&h=1226'}
   const navigation = useNavigation();
   return(
     <View style={{position:'relative'}}>
         <View style={{flexDirection:'row',alignItems:'center',padding:5,position:'absolute',bottom:-40,right:5}}>
-          <Text style={{fontSize:17,fontWeight:'bold',marginRight:5,marginTop:4}}>{username}</Text>
-          <TouchableOpacity onPress={()=>navigation.navigate('Person')}>
+          <Text style={{fontSize:17,fontWeight:'bold',marginRight:5,marginTop:4}}>{uname}</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Person', { username: uname, userImg: tImage })}>
             <View style={{width: 50,height: 50,borderRadius: 25, overflow: 'hidden'}}>
                 <Image source={tImage} style={{ flex: 1,resizeMode: 'cover', width: null,height: null,}}></Image>
             </View>
