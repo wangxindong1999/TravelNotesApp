@@ -38,6 +38,14 @@ const routes = [
         },
       },
       {
+        name: "AddTrade",
+        component: AddTrade,
+        options: {
+          headerShown: false,
+          title: "",
+        },
+      },
+      {
         name: "MyInfo",
         component: MyInfo,
         options: {
@@ -82,14 +90,6 @@ const routes = [
       headerShown: false,
     },
     component: Details,
-  },
-  {
-    name: "AddTrade",
-    component: AddTrade,
-    options: {
-      headerShown: false,
-      title: "",
-    },
   },
 ]
 // //图标选择函数
