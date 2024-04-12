@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { selectUser, logout } from "../../store/feature/userSlice"
 import { Button, Input } from "@rneui/themed"
-import { View, ScrollView, Image, Text, TextInput, StyleSheet, TouchableOpacity, StatusBar } from "react-native";
+import { View, ScrollView, Image, Text, TextInput, StyleSheet, TouchableOpacity, StatusBar, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
@@ -10,8 +10,12 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { Dimensions } from 'react-native';
 import * as FileSystem from 'expo-file-system';
+// import { useHistory } from 'react-router-dom';
 
 export default function AddTrade() {
+  const user = useSelector(selectUser)
+  console.log("user", user);
+  // const history = useHistory()
   const [isScrollEnabled, setIsScrollEnabled] = useState(true);
   const contentWidth = useRef(0);
   const navigation = useNavigation()
@@ -75,19 +79,28 @@ export default function AddTrade() {
   }
 
   // 图片压缩
-  const compreeeImage = async (uri) => {
+  const compressImage = async (image) => {
+    console.log("Image before compress: ", image);
     const compressedImage = await ImageManipulator.manipulateAsync(
-      uri,
+      image.uri,
       [{ resize: { width: 300 } }],
       { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
     )
-    return compressedImage.uri;
+    const returnImage = {
+      // uri: compressedImage.uri,
+      thumbURL: compressedImage.uri,
+      base64: image.base64,
+      height: image.height/(image.width/300),
+      width: 300
+    }
+    console.log("Image after compress: ", returnImage);
+    return returnImage;
 }
 
   // 存入数据库
   const handleSubmit = async (status) => {
     try {
-      const compressedImagesPromises = images.map(async (image) => compreeeImage(image.uri));
+      const compressedImagesPromises = images.map(async (image) => compressImage(image));
       const compressedImages = await Promise.all(compressedImagesPromises);
       const response = await fetch("http://10.0.2.2:3000/posts", {
         method: "POST",
@@ -128,6 +141,23 @@ export default function AddTrade() {
     console.log("发布游记")
     handleSubmit("committed")
   }
+
+  // 检验是否有用户信息
+  if(!user.username) {
+    return (
+      <ImageBackground source={require('../../assets/loginFirst.png')} style={styles.background}>
+        <View style={styles.wrapper}>
+          <Text style={styles.promptText}>请先登录</Text>
+          <Button
+            title="登录"
+            color="#F194FF"
+            accessibilityLabel="点击按钮登录"
+            onPress={() => navigation.navigate("Login")}
+          />
+        </View>
+      </ImageBackground>
+    )
+}
  
   return (
     <View style={styles.background}>
@@ -302,5 +332,21 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     paddingBottom: wp("1%"),
+  },
+  background: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
+  },
+  wrapper: {
+    padding: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 20
+  },
+  promptText: {
+    fontSize: 20,
+    color: '#333',
+    marginBottom: 20,
+    textAlign: 'center'
   },
 })

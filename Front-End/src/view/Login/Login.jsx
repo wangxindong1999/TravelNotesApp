@@ -3,9 +3,12 @@ import { View, TextInput, Image, StyleSheet, Text, TouchableOpacity, StatusBar }
 import { useNavigation } from "@react-navigation/native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Feather } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../store/feature/userSlice';
 
 export default function Login() {
   const navigation = useNavigation()
+  const dispatch = useDispatch()
   const [username, setUsername] = useState("")
   const [userImg, setUserImg] = useState("")
   const [password, setPassword] = useState("")
@@ -33,13 +36,28 @@ export default function Login() {
         password: password,
       }),
     })
-    const data = await response.json()
+    const cookies = response.headers.get("set-cookie")
+    // console.log(response.headers.get("set-cookie"))
+    // console.log(cookies);
 
     if (response.ok) {
       // 获取用户头像
-      const user = await data.user;
+      // const user = await data.user;
       // await AsyncStorage.setItem("username", user.username);
       // await AsyncStorage.setItem("userImg", user.userImg);
+      const cookieArray =  cookies.split(', ');
+      const userdata = {};
+      cookieArray.forEach(cookie => {
+        const [key, value] = cookie.split(';')[0].split('=');
+        userdata[key] = decodeURIComponent(value);
+      });
+      const user = {
+        userId: userdata.userId,
+        username: userdata.username,
+        userImg: userdata.userImg,
+      }
+      dispatch(setUser(user));
+      // console.log("user", user);
       alert("登录成功")
       navigation.navigate("Home")
     } else {

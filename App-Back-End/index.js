@@ -108,7 +108,7 @@ app.post('/posts', async function(req, res) {
     const content = req.body.content;
     const images = req.body.images;
     const status = req.body.status;
-    const user = req.body.user;
+    const username = req.body.username;
     
     try {
       let newPost = new Posts({
@@ -116,7 +116,7 @@ app.post('/posts', async function(req, res) {
         content: content,
         images: images,
         status: status,
-        user: user,
+        username: username,
       });
   
       await newPost.save();
