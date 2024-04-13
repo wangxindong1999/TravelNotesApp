@@ -30,25 +30,30 @@ export default function Details() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 获取用户名和头像
-        // const userId = response.data.user
-        // const userResponse = await axios.get(`http://10.0.2.2:3000/users/${userId}`)
-        // setUsername(userResponse.data.username)
-        // setUserAvatar(`data:image/jpeg;base64,${userResponse.data.userImg}`)
 
         // 获取图片
         const response = await axios.get(`http://10.0.2.2:3000/posts/${post_id}`)
-        // console.log(response.data.images);
+        // console.log(response.data);
+        // console.log("0");
+        // console.log("1", response.data.images);
         const thumbURLs = response.data.images.map(image => image.thumbURL)
-        // console.log(thumbURLs);
         setImages(thumbURLs)
-        console.log(images);
+        // console.log("2",thumbURLs);
+        // console.log("3",images);
+        // console.log("4");
         // setImages(response.data.images.map(image => `data:image/jpeg;base64,${image.base64}`))
 
         // 获取文章标题和内容
         setTitle(response.data.title)
         setContent(response.data.content)
         
+        // 获取用户名和头像
+        const userId = response.data.user
+        const userResponse = await axios.get(`http://10.0.2.2:3000/users/${userId}`)
+        console.log(userResponse.data);
+        setUsername(userResponse.data.username)
+        setUserAvatar(userResponse.data.userImg)
+        // setUserAvatar(`data:image/jpeg;base64,${userResponse.data.userImg}`)
       } catch (error) {
         console.log(error);
       }
@@ -85,11 +90,11 @@ export default function Details() {
 
         <ScrollView style={{width: wp("100%")}}>
           {/* 轮播图 */}
-          <CarouselComponent 
+          {images.length>0 && <CarouselComponent 
             images={images}
             activeSlide={activeSlide}
             updateActiveSlide={updateActiveSlide}
-          />
+          />}
           <View style={styles.articleContainer}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.content}>{content}</Text>

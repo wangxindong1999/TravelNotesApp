@@ -18,7 +18,7 @@ export default function Home() {
         {/* <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button> */}
          {/* <Button title="navigate to addtrade" onPress={() => navigation.navigate('AddTrade')}></Button> */}
         {/* <Button title="navigate to welcome" onPress={() => navigation.navigate('Welcome')}></Button>  */}
-        <TestWaterfallFlowScreen />
+        <TestWaterfallFlowScreen navigation={navigation}/>
         {/* <Button title="click me" onPress={() => navigation.navigate('Login')}></Button> */}
     </View>
     // <SafeAreaView style={{backgroundColor: "green", flex: 1, paddingTop:StatusBar.currentHeight}}>
