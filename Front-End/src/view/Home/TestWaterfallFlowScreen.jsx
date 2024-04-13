@@ -124,7 +124,7 @@ export default class TestWaterfallFlowScreen extends Component {
         onRefresh={() => this.loadData(1, true)}
         renderItem={({ item, index, columnIndex }) => {
           return (
-            <Card item={item} index={index} columnIndex={columnIndex} />
+            <Card item={item} index={index} columnIndex={columnIndex} navigation={this.props.navigation}/>
           )
         }}
       />
@@ -144,7 +144,7 @@ class Card extends PureComponent {
         <TouchableOpacity 
           style={{ backgroundColor: '#fff', flex: 1 ,marginBottom:5,marginLeft:columnIndex===0?0:5,borderRadius:5}} 
           activeOpacity={1}
-          onPress={()=> this.detailPage(item) }
+          onPress={()=>  this.props.navigation.navigate("Details",{itemId:item.id}) }
         >
           <Image 
             source={{ uri: item.thumbURL, width: item.width, height: item.height }} 
