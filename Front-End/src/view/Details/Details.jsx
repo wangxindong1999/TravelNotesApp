@@ -12,7 +12,9 @@ import { selectUser } from '../../store/feature/userSlice';
 export default function Details() {
   const navigation = useNavigation();
   const route = useRoute();
-  const postId = route.params.itemId;
+  // console.log(route.params);
+  const post_id = route.params.itemId;
+  // console.log(post_id);
   // const [images, setImages] = useState([
   //   require("../../assets/1.jpg"),
   //   require("../../assets/2.jpg"),
@@ -22,19 +24,31 @@ export default function Details() {
   const [username, setUsername] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
   const [images, setImages] = useState([]);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 获取图片
-        const response = await axios.get(`http://10.0.2.2:3000/posts/${postId}`)
-        setImages(response.data.images.map(image => `data:image/jpeg;base64,${image.base64}`))
-
         // 获取用户名和头像
-        const userId = response.data.user
-        const userResponse = await axios.get(`http://10.0.2.2:3000/users/${userId}`)
-        setUsername(userResponse.data.username)
-        setUserAvatar(`data:image/jpeg;base64,${userResponse.data.userImg}`)
+        // const userId = response.data.user
+        // const userResponse = await axios.get(`http://10.0.2.2:3000/users/${userId}`)
+        // setUsername(userResponse.data.username)
+        // setUserAvatar(`data:image/jpeg;base64,${userResponse.data.userImg}`)
+
+        // 获取图片
+        const response = await axios.get(`http://10.0.2.2:3000/posts/${post_id}`)
+        // console.log(response.data.images);
+        const thumbURLs = response.data.images.map(image => image.thumbURL)
+        // console.log(thumbURLs);
+        setImages(thumbURLs)
+        console.log(images);
+        // setImages(response.data.images.map(image => `data:image/jpeg;base64,${image.base64}`))
+
+        // 获取文章标题和内容
+        setTitle(response.data.title)
+        setContent(response.data.content)
+        
       } catch (error) {
         console.log(error);
       }
@@ -77,8 +91,8 @@ export default function Details() {
             updateActiveSlide={updateActiveSlide}
           />
           <View style={styles.articleContainer}>
-            <Text style={styles.title}>标题</Text>
-            <Text style={styles.content}></Text>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.content}>{content}</Text>
           </View>
           <View style={styles.postedTimeContainer}>
             <Text style={styles.postedTime}>发布时间</Text>

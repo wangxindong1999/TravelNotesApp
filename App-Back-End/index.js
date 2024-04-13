@@ -109,6 +109,8 @@ app.post('/posts', async function(req, res) {
     const images = req.body.images;
     const status = req.body.status;
     const username = req.body.username;
+    const userImg = req.body.userImg;
+    const userId = req.body.userId;
     
     try {
       let newPost = new Posts({
@@ -117,6 +119,8 @@ app.post('/posts', async function(req, res) {
         images: images,
         status: status,
         username: username,
+        userImg: userImg,
+        user: userId
       });
   
       await newPost.save();
@@ -128,6 +132,43 @@ app.post('/posts', async function(req, res) {
     }
 }
 )
+
+// 以id获取posts集合中数据
+app.get('/posts/:id', async function(req, res) {
+  // console.log(req);
+  // console.log(req.params);
+  // console.log(req.params.id);
+  // console.log(res.json());
+  try {
+    const post = await Posts.findById(req.params.id);
+    // console.log(post);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    // console.log(res.json(post));
+    return res.json(post);
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: 'Error occurred during post retrieval', error: err.message });
+  }
+});
+
+// 以id获取users集合中数据
+app.get('/users/:id', async function(req, res) {
+  try {
+    const user = await Users.findById(req.params.id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    return res.json(user);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: 'Error occurred during user retrieval', error: err.message });
+  }
+});
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
