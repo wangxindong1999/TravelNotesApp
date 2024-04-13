@@ -80,7 +80,7 @@ export default function AddTrade() {
 
   // 图片压缩
   const compressImage = async (image) => {
-    console.log("Image before compress: ", image);
+    // console.log("Image before compress: ", image);
     const compressedImage = await ImageManipulator.manipulateAsync(
       image.uri,
       [{ resize: { width: 300 } }],
@@ -93,7 +93,7 @@ export default function AddTrade() {
       height: image.height/(image.width/300),
       width: 300
     }
-    console.log("Image after compress: ", returnImage);
+    // console.log("Image after compress: ", returnImage);
     return returnImage;
 }
 
@@ -113,7 +113,10 @@ export default function AddTrade() {
           content: content,
           images: compressedImages,
           status: status,
-          user: "6616cdfea41ccfe9f7678ff1", // user先以此代替
+          // user: "6616cdfea41ccfe9f7678ff1", // user先以此代替
+          userId: user.userId,
+          username: user.username,
+          userImg: user.userImg,
         }),
     })
     if (response.ok) {
