@@ -36,25 +36,26 @@ router.post('/myInfo', async function (req, res) {
          .limit(pageSize);
         if(posts.length!==0){
             // 只返回每个Post中images数组的第一个元素的信息
-            const formattedPosts = await posts.map(post => {
+            const formattedPosts = posts.map(post => {
                 return {
                     reviewer_id: post._id,
-                    username: post.username,
-                     title: post.title,
-                        content: post.content,
-                        status:post.status,
-                        reason_type: post.reason_type,
-                        reason:post.reason,
-                        images: post.images.length > 0 ? post.images[0] : [],
-                        status: post.status,
-                        created_at: post.createdAt,
-                        posted_at: post.postedAt,
-                        updated_at: post.updatedAt,
-                        deleted_at: post.deletedAt,
-                        isDeleted: post.isDeleted,
-                        reason_type: post.reason_type,
-                        reason: post.reason,
-                        userImg:post.userImg
+                    username: post.username,
+                    title: post.title,
+                    content: post.content,
+                    status: post.status,
+                    reason_type: post.reason_type,
+                    reason: post.reason,
+                    images: post.images.length > 0 ? post.images[0] : [],
+                    all_images: post.images,
+                    status: post.status,
+                    created_at: post.createdAt,
+                    posted_at: post.postedAt,
+                    updated_at: post.updatedAt,
+                    deleted_at: post.deletedAt,
+                    isDeleted: post.isDeleted,
+                    reason_type: post.reason_type,
+                    reason: post.reason,
+                    userImg: post.userImg
                 };
             });
             return res.send(formattedPosts);

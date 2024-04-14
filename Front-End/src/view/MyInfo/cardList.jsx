@@ -70,7 +70,7 @@ class CardList extends Component {
     }
     try {
       const { activeIndex } = this.props
-      console.log(activeIndex)
+      // console.log(activeIndex)
       const response = await fetch("http://10.0.2.2:3000/myInfo", {
         method: "POST",
         headers: {
@@ -85,6 +85,7 @@ class CardList extends Component {
       })
       if (response.ok) {
         const cardList = await response.json()
+        // console.log("cardlist", cardList);
         if (cardList.length === undefined) {
           this.loading = false
           this.page = 1
@@ -101,6 +102,7 @@ class CardList extends Component {
             const width = item.images.width
             const height = item.images.height
             const thumbURL = item.images.thumbURL
+            const all_thumbURL = item.all_images.map((image) => image.thumbURL)
             const id = item.reviewer_id
             const username = item.username
             const userImg = item.userImg
@@ -110,6 +112,7 @@ class CardList extends Component {
               width: cardWidth,
               height: Math.floor((height / width) * cardWidth),
               thumbURL: thumbURL,
+              all_thumbURL: all_thumbURL,
               id: id,
               userImg: userImg,
               username: username,
@@ -181,6 +184,7 @@ class CardList extends Component {
 class Card extends PureComponent {
   render() {
     const { item, index, columnIndex } = this.props
+    // console.log({item});
     const { activeIndex } = this.props
     const reason = "涉及违规词汇"
     return (
@@ -195,10 +199,17 @@ class Card extends PureComponent {
           }}
           activeOpacity={1}
           onPress={() => {
-            console.log(activeIndex)
-            console.log(this.props.navigation)
-            console.log(item.id)
-            this.props.navigation.navigate("Details", { itemId: item.id })
+            // console.log(activeIndex)
+            // console.log(this.props.navigation)
+            // console.log(item.id)
+            this.props.navigation.navigate("Details",
+            { itemId: item.id,
+              url: item.thumbURL,
+              all_url: item.all_thumbURL,
+              userImg: item.userImg,
+              // username: item.username,
+              // title: item.title
+            })
           }}
         >
           <Image
@@ -232,7 +243,7 @@ class Card extends PureComponent {
 
 class Operate extends PureComponent {
   deleteItem = async (id) => {
-    console.log(id, "id")
+    // console.log(id, "id")
     try {
       // http://10.0.2.2:3000/deletePost
       const response = await fetch("http://10.0.2.2:3000/deletePost", {
@@ -247,7 +258,7 @@ class Operate extends PureComponent {
 
       if (response.ok) {
         const message = await response.json()
-        console.log(message)
+        // console.log(message)
       }
     } catch (error) {
       console.error("Error fetching data:", error)

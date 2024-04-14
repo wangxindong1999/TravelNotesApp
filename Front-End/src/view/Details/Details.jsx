@@ -14,6 +14,12 @@ export default function Details() {
   const route = useRoute();
   // console.log(route.params);
   const post_id = route.params.itemId;
+  const url = route.params.url;
+  // console.log(url);
+  const images = route.params.all_url;
+  const userImg = route.params.userImg;
+  console.log(userImg);
+  // console.log(all_url);
   // console.log(post_id);
   // const [images, setImages] = useState([
   //   require("../../assets/1.jpg"),
@@ -22,8 +28,8 @@ export default function Details() {
   // ]);
   const user = useSelector(selectUser);
   const [username, setUsername] = useState('');
-  const [userAvatar, setUserAvatar] = useState('');
-  const [images, setImages] = useState([]);
+  // const [userAvatar, setUserAvatar] = useState('');
+  // const [images, setImages] = useState([url]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
@@ -36,8 +42,8 @@ export default function Details() {
         // console.log(response.data);
         // console.log("0");
         // console.log("1", response.data.images);
-        const thumbURLs = response.data.images.map(image => image.thumbURL)
-        setImages(thumbURLs)
+        // const thumbURLs = response.data.images.map(image => image.thumbURL)
+        // setImages(thumbURLs)
         // console.log("2",thumbURLs);
         // console.log("3",images);
         // console.log("4");
@@ -50,9 +56,9 @@ export default function Details() {
         // 获取用户名和头像
         const userId = response.data.user
         const userResponse = await axios.get(`http://10.0.2.2:3000/users/${userId}`)
-        console.log(userResponse.data);
+        // console.log(userResponse.data);
         setUsername(userResponse.data.username)
-        setUserAvatar(userResponse.data.userImg)
+        // setUserAvatar(userResponse.data.userImg)
         // setUserAvatar(`data:image/jpeg;base64,${userResponse.data.userImg}`)
       } catch (error) {
         console.log(error);
@@ -65,6 +71,7 @@ export default function Details() {
   const updateActiveSlide = index => {
     setActiveSlide(index);
   };
+  // console.log("6", images.length);
 
     return (
       <View style={styles.background}>
@@ -77,7 +84,7 @@ export default function Details() {
           </TouchableOpacity>
           {/* 用户头像 */}
           <Image
-            source={{uri: userAvatar}}
+            source={{uri: userImg}}
             style={styles.userImage}
           />
           {/* 用户名 */}
@@ -90,11 +97,11 @@ export default function Details() {
 
         <ScrollView style={{width: wp("100%")}}>
           {/* 轮播图 */}
-          {images.length>0 && <CarouselComponent 
+          <CarouselComponent 
             images={images}
             activeSlide={activeSlide}
             updateActiveSlide={updateActiveSlide}
-          />}
+          />
           <View style={styles.articleContainer}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.content}>{content}</Text>
