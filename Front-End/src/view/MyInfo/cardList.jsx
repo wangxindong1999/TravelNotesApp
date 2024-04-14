@@ -116,6 +116,8 @@ class CardList extends Component {
               userImg: userImg,
               username: username,
               title: title,
+              reason: item.reason,
+              reason_type: item.reason_type,
             }
           })
 
@@ -222,7 +224,7 @@ class Card extends PureComponent {
                 marginBottom: 5,
               }}
             >
-              !{reason}
+              !{item.reason ? item.reason : reason}
             </Text>
           )}
         </TouchableOpacity>
