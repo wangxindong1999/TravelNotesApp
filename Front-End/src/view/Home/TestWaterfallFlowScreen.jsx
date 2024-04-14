@@ -68,6 +68,16 @@ export default class TestWaterfallFlowScreen extends Component {
 
       if (response.ok) {
         const cardList = await response.json()
+        if (cardList.length === undefined) {
+          this.loading = false
+          this.setState({
+            data: this.state.data,
+            refreshing: false,
+            noMore: true,
+            inited: true,
+          })
+          return
+        }
         if (cardList.length !== 0) {
           const newData = cardList.map((item) => {
             const width = item.images.width
