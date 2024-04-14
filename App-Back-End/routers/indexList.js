@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const Post = require("./postsModel")
+const fs = require("fs")
 
 router.post("/indexList", async function (req, res) {
   const currentPage = req.body.currentPage
@@ -22,15 +23,37 @@ router.post("/indexList", async function (req, res) {
     })
       .skip(startIndex)
       .limit(pageSize)
+    if (posts.length === undefined) {
+      // return res.status(404).json({ message: "未找到的帖子！" })
+    }
     if (posts.length !== 0) {
       // 只返回每个Post中images数组的第一个元素的信息
+
       const formattedPosts = await posts.map((post) => {
+        let image = {}
+        if (post.images.length > 0 && !post.images[0].thumbURL) {
+          const imagePath = "img/" + post.images[0].base64 + ".png"
+          const imageBuffer = fs.readFileSync(imagePath)
+          image = {
+            width: post.images[0].width,
+            height: post.images[0].height,
+            thumbURL: null,
+            base64: imageBuffer.toString("base64"),
+          }
+        } else {
+          image = {
+            width: post.images[0].width,
+            height: post.images[0].height,
+            thumbURL: post.images[0].thumbURL,
+            base64: null,
+          }
+        }
         return {
           reviewer_id: post._id,
           username: post.username,
           title: post.title,
           content: post.content,
-          images: post.images.length > 0 ? post.images[0] : [],
+          images: image,
           status: post.status,
           created_at: post.createdAt,
           posted_at: post.postedAt,

@@ -83,15 +83,18 @@ export default class TestWaterfallFlowScreen extends Component {
             const width = item.images.width
             const height = item.images.height
             const thumbURL = item.images.thumbURL
+            const base64 = item.images.base64
             const id = item.reviewer_id
             const username = item.username
             const userImg = item.userImg
             const cardWidth = Math.floor(window.width / 2)
             const title = item.title
+            // console.log(item.images, "dwadawd")
             return {
               width: cardWidth,
               height: Math.floor((height / width) * cardWidth),
               thumbURL: thumbURL,
+              base64: "data:image/png;base64," + base64,
               id: id,
               userImg: userImg,
               username: username,
@@ -180,7 +183,7 @@ class Card extends PureComponent {
         >
           <Image
             source={{
-              uri: item.thumbURL,
+              uri: item.thumbURL ? item.thumbURL : item.base64,
               width: item.width,
               height: item.height,
             }}

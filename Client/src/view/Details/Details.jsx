@@ -200,7 +200,11 @@ export default function Details(props) {
                     <Image
                       width={200}
                       height={250}
-                      src={item.thumbURL}
+                      src={
+                        item.thumbURL
+                          ? item.thumbURL
+                          : "data:image/png;base64," + item.base64
+                      }
                       key={index}
                     />
                   </Col>

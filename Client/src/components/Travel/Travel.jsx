@@ -16,7 +16,9 @@ const mapLsit = (travelData) => {
       <TravelList
         id={item.id}
         key={index}
-        imgUrl={item.imgUrl}
+        imgUrl={
+          item.imgUrl ? item.imgUrl : "data:image/png;base64," + item.base64
+        }
         title={item.title}
         content={item.content}
         flag={item.flag}
@@ -46,6 +48,7 @@ export default function Travel(props) {
             return {
               id: item._id,
               imgUrl: item.images.thumbURL,
+              base64: item.images.base64,
               title: item.title,
               content: item.content,
               flag: item.status,
@@ -72,6 +75,7 @@ export default function Travel(props) {
             return {
               id: item._id,
               imgUrl: item.images.thumbURL,
+              base64: item.images.base64,
               title: item.title,
               content: item.content,
               flag: item.status,

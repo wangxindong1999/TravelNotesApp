@@ -101,6 +101,7 @@ class CardList extends Component {
             const width = item.images.width
             const height = item.images.height
             const thumbURL = item.images.thumbURL
+            const base64 = item.images.base64
             const id = item.reviewer_id
             const username = item.username
             const userImg = item.userImg
@@ -110,6 +111,7 @@ class CardList extends Component {
               width: cardWidth,
               height: Math.floor((height / width) * cardWidth),
               thumbURL: thumbURL,
+              base64: "data:image/png;base64," + base64,
               id: id,
               userImg: userImg,
               username: username,
@@ -203,13 +205,12 @@ class Card extends PureComponent {
         >
           <Image
             source={{
-              uri: item.thumbURL,
+              uri: item.thumbURL !== null ? item.thumbURL : item.base64,
               width: item.width,
               height: item.height,
             }}
             resizeMode="cover"
           />
-
           <Text style={{ fontWeight: 500, padding: 5 }}>{item.title}</Text>
           <ConnectedOperate navigation={this.props.navigation} item={item} />
           {activeIndex === 2 && (
