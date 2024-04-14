@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const imageSchema = new mongoose.Schema({
   width: { type: String, required: true },
   height: { type: String, required: true },
-  thumbURL: { type: String, required: true }
+  thumbURL: { type: String, required: true },
+  base64: { type: String, required: true }
 });
 
 const postSchema = new mongoose.Schema({
