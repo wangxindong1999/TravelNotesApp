@@ -6,7 +6,7 @@ export default function Person({route}) {
   const { username, userImg } = route.params;
   console.log(username,userImg)
   const navigation = useNavigation();
- logout =async ()=>{
+  logout =async ()=>{
   console.log(598)
     try{
       const response=await fetch('http://10.0.2.2:3000/logout',{

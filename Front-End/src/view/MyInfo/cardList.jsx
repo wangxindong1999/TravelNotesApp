@@ -323,6 +323,7 @@ class Operate extends PureComponent {
   }
 
 
+
   render() {
     // console.log(this.props.item.id)
     const { activeIndex } = this.props
@@ -354,7 +355,7 @@ class Operate extends PureComponent {
         {(activeIndex === 1 || activeIndex === 2) && (
           <TouchableOpacity
             onPress={() =>
-              this.props.navigation.navigate("Details", {
+              this.props.navigation.navigate("UpdatePost", {
                 itemId: this.props.item.id,
               })
             }

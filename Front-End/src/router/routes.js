@@ -10,6 +10,7 @@ import ImgSource from "../assets/index"
 import Search from "../view/Home/search"
 import Person from "../view/MyInfo/person"
 import UserDetails from "../view/MyInfo/userDetails"
+import UpdatePost from "../view/MyInfo/updatePost"
 
 //路由配置
 const routes = [
@@ -66,6 +67,15 @@ const routes = [
     options: {
       title: "个人中心",
     },
+  },
+  {
+    name:"UpdatePost",
+    component:UpdatePost,
+    options: {
+      headerShown: false,
+      title: "",
+    },
+
   },
     {
       name: "UserDetails",
