@@ -11,7 +11,7 @@ router.post("/myInfo", async function (req, res) {
   const { username } = req.body
   let statusString = {}
   console.log(currentPage)
-
+  
   switch (status) {
     case 3:
       statusString = "draft"

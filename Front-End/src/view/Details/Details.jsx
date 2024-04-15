@@ -24,20 +24,26 @@ export default function Details() {
 
   const navigation = useNavigation();
   const route = useRoute();
+  // console.log(route.params);
   const postId = route.params.itemId;
-  // console.log(postId);
-
+  const url = route.params.url;
+  // console.log(url);
+  const images = route.params.all_url;
+  const userImg = route.params.userImg;
+  console.log(userImg);
+  // console.log(all_url);
+  // console.log(post_id);
   // const [images, setImages] = useState([
   //   require("../../assets/1.jpg"),
   //   require("../../assets/2.jpg"),
   //   require("../../assets/3.jpg"),
   // ]);
-  const user = useSelector(selectUser)
-  const [username, setUsername] = useState("")
-  const [userAvatar, setUserAvatar] = useState("")
-  const [images, setImages] = useState([])
-  const [title, setTitle] = useState("")
-  const [content, setContent] = useState("")
+  const user = useSelector(selectUser);
+  const [username, setUsername] = useState('');
+  // const [userAvatar, setUserAvatar] = useState('');
+  // const [images, setImages] = useState([url]);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,6 +55,8 @@ export default function Details() {
         // console.log(response.data);
         // console.log("0");
         // console.log("1", response.data.images);
+        // const thumbURLs = response.data.images.map(image => image.thumbURL)
+        // setImages(thumbURLs)
         const thumbURLs = response.data.images.map((image) =>
           image.thumbURL
             ? image.thumbURL
@@ -69,8 +77,9 @@ export default function Details() {
         const userResponse = await axios.get(
           `http://10.0.2.2:3000/users/${userId}`
         )
+        // console.log(userResponse.data);
         setUsername(userResponse.data.username)
-        setUserAvatar(userResponse.data.userImg)
+        // setUserAvatar(userResponse.data.userImg)
         // setUserAvatar(`data:image/jpeg;base64,${userResponse.data.userImg}`)
       } catch (error) {
         console.log(error)
@@ -79,10 +88,11 @@ export default function Details() {
     fetchData()
   }, [])
 
-  const [activeSlide, setActiveSlide] = useState(0)
+  const [activeSlide, setActiveSlide] = useState(0);
   const updateActiveSlide = (index) => {
-    setActiveSlide(index)
-  }
+    setActiveSlide(index);
+  };
+  // console.log("6", images.length);
 
   return (
     <View style={styles.background}>
@@ -103,7 +113,7 @@ export default function Details() {
         {/* 用户头像 */}
         {/*uri不能为空值，因此使用“123456”作为占位符，防止空值报错*/}
         <Image
-          source={{ uri: userAvatar ? userAvatar : "123456" }}
+          source={{ uri: userAvatar ? userAvatar : "123456" }} // userImg
           style={styles.userImage}
         />
         {/* 用户名 */}
