@@ -1,35 +1,39 @@
-const express = require("express")
-const mongoose = require("mongoose")
-const bcrypt = require("bcrypt")
-const bodyParser = require("body-parser")
-const Users = require("./routers/usersModel")
-const Posts = require("./routers/postsModel")
-const myInfo = require("./routers/myInfo")
-const indexList = require("./routers/indexList")
-const search = require("./routers/search")
-const person = require("./routers/person")
-const deletePost = require("./routers/deletePost")
-const fs = require("fs")
-require("dotenv").config()
-const uri = process.env.MONGODB_URI
 
-mongoose
-  .connect(uri)
-  .then(() => {
-    console.log("Database connection successful")
-  })
-  .catch((err) => {
-    console.error("Database connection error", err)
-  })
+const express = require('express');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
+const Users = require('./routers/usersModel');
+const Posts = require('./routers/postsModel');
+const myInfo=require('./routers/myInfo')
+const indexList=require('./routers/indexList')
+const search=require('./routers/search')
+const person=require('./routers/person')
+const deletePost=require('./routers/deletePost')
+const publishPost=require('./routers/pubulishPost')
+const logout=require('./routers/logout')
+require('dotenv').config();
+const uri = process.env.MONGODB_URI;
 
-const app = express()
-app.use(bodyParser.json({ limit: "10mb", extended: true }))
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(indexList)
-app.use(search)
-app.use(myInfo)
-app.use(person)
-app.use(deletePost)
+mongoose.connect(uri)
+    .then(() => {
+        console.log('Database connection successful');
+    })
+    .catch(err => {
+        console.error('Database connection error', err);
+    });
+
+const app = express();
+app.use(bodyParser.json({limit: '10mb', extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(indexList);
+app.use(search);
+app.use(myInfo);
+app.use(person);
+app.use(deletePost);
+app.use(publishPost);
+app.use(logout);
+
 
 // 注册
 app.post("/register", async function (req, res) {
@@ -107,6 +111,7 @@ app.post("/login", async function (req, res) {
 })
 
 // 游记
+
 app.post("/posts", async function (req, res) {
   const title = req.body.title
   const content = req.body.content
@@ -192,6 +197,7 @@ app.get("/users/:id", async function (req, res) {
 
     if (!user) {
       return res.status(404).json({ message: "User not found" })
+
     }
 
     return res.json(user)

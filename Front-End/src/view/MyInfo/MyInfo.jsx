@@ -36,21 +36,32 @@ export default function MyInfo() {
   const [userInfo, setUserInfo] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch("http://10.0.2.2:3000/person", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // 包含凭据（包括 cookie）
-        })
-        if (response.ok) {
-          const person = await response.json()
-          setUsername(person.username)
-          setUserImg(person.userImg)
-          setUserInfo(true)
-        } else {
-          alert("请登录！")
+
+      console.log(5555);
+        try {
+            const response = await fetch("http://10.0.2.2:3000/person", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include' // 包含凭据（包括 cookie）
+            });
+            if (response.ok) {
+              console.log(2666)
+              const person = await response.json();
+              if(person.message=='0000'){
+                alert("请登录！");
+                navigation.navigate("Login");
+              }else if(message=='1111'){
+                console.log("用户处于登录状态！")
+                setUsername(person.username);
+                setUserImg(person.userImg);
+                setUserInfo(true);
+              }
+            } 
+        } catch (error) {
+            console.error('Error:', error);
+
         }
       } catch (error) {
         console.error("Error:", error)
@@ -65,18 +76,14 @@ export default function MyInfo() {
     <View style={styles.container}>
       {userInfo ? (
         <>
-          <Image source={bkImage} style={{ height: "30%" }} />
-          <Person userImg={userImg} username={username} />
-          {/* <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button> */}
-          <ButtonGroup
-            activeIndex={activeIndex}
-            handlePress={handlePress.bind(this)}
-          />
-          <CardList
-            username={username}
-            activeIndex={activeIndex}
-            navigation={navigation}
-          />
+
+            <Image source={bkImage} style={{ height: '30%' }} />
+            <Person userImg={userImg} username={username}/>
+            {/* <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button> */}
+            <ButtonGroup activeIndex={activeIndex} handlePress={handlePress.bind(this)} />
+            <CardList username='username' activeIndex={activeIndex} navigation={navigation}/>
+            {/* 其他用户暂时没有数据，将username统一为‘’username */}
+
         </>
       ) : (
         <Text>请登录</Text>
