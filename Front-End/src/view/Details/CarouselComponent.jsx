@@ -10,7 +10,7 @@ const CarouselComponent = ({images, updateActiveSlide, activeSlide}) => {
   return (
     <View style={styles.item}>
       <ParallaxImage
-        source={item}
+        source={{ uri: item }}
         containerStyle={styles.imageContainer}
         style={styles.image}
         parallaxFactor={0.4}

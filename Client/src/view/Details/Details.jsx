@@ -64,7 +64,6 @@ export default function Details(props) {
     ref.current.parentNode.style.padding = "0"
     getDetail(id)
       .then((res) => {
-        console.log(res)
         settraveldetail(
           res.data.map((item) => {
             return {
@@ -200,7 +199,11 @@ export default function Details(props) {
                     <Image
                       width={200}
                       height={250}
-                      src={item.thumbURL}
+                      src={
+                        item.thumbURL
+                          ? item.thumbURL
+                          : "data:image/png;base64," + item.base64
+                      }
                       key={index}
                     />
                   </Col>

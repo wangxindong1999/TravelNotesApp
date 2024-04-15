@@ -83,14 +83,25 @@ class CardList extends Component {
           username: this.username,
         }),
       })
-
       if (response.ok) {
         const cardList = await response.json()
-        if (cardList.length !== 0) {
+        if (cardList.length === undefined) {
+          this.loading = false
+          this.page = 1
+          this.setState({
+            data: [],
+            refreshing: false,
+            noMore: false,
+            inited: true,
+          })
+          return
+        }
+        if (cardList.length) {
           const newData = cardList.map((item) => {
             const width = item.images.width
             const height = item.images.height
             const thumbURL = item.images.thumbURL
+            const base64 = item.images.base64
             const id = item.reviewer_id
             const username = item.username
             const userImg = item.userImg
@@ -100,10 +111,13 @@ class CardList extends Component {
               width: cardWidth,
               height: Math.floor((height / width) * cardWidth),
               thumbURL: thumbURL,
+              base64: "data:image/png;base64," + base64,
               id: id,
               userImg: userImg,
               username: username,
               title: title,
+              reason: item.reason,
+              reason_type: item.reason_type,
             }
           })
 
@@ -155,7 +169,6 @@ class CardList extends Component {
         onRefresh={() => this.loadData(1, true)}
         renderItem={({ item, index, columnIndex }) => {
           return (
-
             <ConnectedCard
               item={item}
               index={index}
@@ -163,7 +176,6 @@ class CardList extends Component {
               navigation={this.props.navigation}
               loadData={this.loadData}
             />
-
           )
         }}
       />
@@ -191,20 +203,21 @@ class Card extends PureComponent {
             console.log(activeIndex)
             // console.log(this.props.navigation)
             console.log(item.id)
-            this.props.navigation.navigate("Details",{itemId:item.id})
+            this.props.navigation.navigate("Details", { itemId: item.id })
           }}
         >
           <Image
             source={{
-              uri: item.thumbURL,
+              uri: item.thumbURL !== null ? item.thumbURL : item.base64,
               width: item.width,
               height: item.height,
             }}
             resizeMode="cover"
           />
-
           <Text style={{ fontWeight: 500, padding: 5 }}>{item.title}</Text>
+
           <ConnectedOperate navigation={this.props.navigation} item={item} loadData={this.props.loadData}/>
+
           {activeIndex === 2 && (
             <Text
               style={{
@@ -214,10 +227,9 @@ class Card extends PureComponent {
                 marginBottom: 5,
               }}
             >
-              !{reason}
+              !{item.reason ? item.reason : reason}
             </Text>
           )}
-
         </TouchableOpacity>
       </View>
     )
@@ -292,36 +304,52 @@ class Operate extends PureComponent {
     const { activeIndex } = this.props
     // console.log(activeIndex);
 
-    return(
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: 5,
-      }}
-    >
-      {/* 分享 */}
-      {activeIndex === 0 && (
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: 5,
+        }}
+      >
+        {/* 分享 */}
+        {activeIndex === 0 && (
+          <TouchableOpacity
+            onPress={() => {
+              console.log(activeIndex)
+            }}
+          >
+            <Image
+              source={require("../../assets/share.png")}
+              style={{ width: 18, height: 18 }}
+            ></Image>
+          </TouchableOpacity>
+        )}
+        {/* 编辑*/}
+        {(activeIndex === 1 || activeIndex === 2) && (
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate("Details", {
+                itemId: this.props.item.id,
+              })
+            }
+          >
+            <Image
+              source={require("../../assets/write.png")}
+              style={{ width: 17, height: 17 }}
+            ></Image>
+          </TouchableOpacity>
+        )}
+        {/* 删除 */}
         <TouchableOpacity
           onPress={() => {
-            console.log(activeIndex)
+            this.deleteItem(this.props.item.id)
           }}
         >
           <Image
-            source={require("../../assets/share.png")}
-            style={{ width: 18, height: 18 }}
-          ></Image>
-        </TouchableOpacity>
-      )}
-      {/* 编辑*/}
-      {(activeIndex === 1 || activeIndex === 2) && (
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate("Details",{itemId:this.props.item.id})}
-        >
-          <Image
-            source={require("../../assets/write.png")}
-            style={{ width: 17, height: 17 }}
+            source={require("../../assets/delete.png")}
+            style={{ width: 20, height: 20 }}
           ></Image>
         </TouchableOpacity>
       )}
@@ -337,6 +365,7 @@ class Operate extends PureComponent {
         <TouchableOpacity onPress={()=>{this.publishItem(this.props.item.id)}}>
              <View
               style={{
+
               borderRadius: 10,
               backgroundColor: "#4AB05C",
               width: 60,
@@ -349,8 +378,8 @@ class Operate extends PureComponent {
         </TouchableOpacity>
       )}
     </View>)
-  }
 
+  }
 }
 
 class Footer extends PureComponent {
@@ -397,7 +426,6 @@ class Empty extends PureComponent {
     )
   }
 }
-
 
 const ConnectedCard = connect(mapStateToProps)(Card)
 const ConnectedOperate = connect(mapStateToProps)(Operate)
