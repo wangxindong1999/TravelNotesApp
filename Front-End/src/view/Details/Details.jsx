@@ -25,7 +25,7 @@ export default function Details() {
   const navigation = useNavigation();
   const route = useRoute();
   const postId = route.params.itemId;
-  console.log(postId);
+  // console.log(postId);
 
   // const [images, setImages] = useState([
   //   require("../../assets/1.jpg"),
@@ -44,7 +44,7 @@ export default function Details() {
       try {
         // 获取图片
         const response = await axios.get(
-          `http://10.0.2.2:3000/posts/${post_id}`
+          `http://10.0.2.2:3000/posts/${postId}`
         )
         // console.log(response.data);
         // console.log("0");

@@ -207,7 +207,7 @@ class Card extends PureComponent {
               }}
             >
               <Image
-                source={require("../../assets/person1.jpg")}
+                source={{uri:item.userImg}}
                 style={{
                   flex: 1,
                   resizeMode: "cover",

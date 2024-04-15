@@ -1,7 +1,7 @@
 import React, { PureComponent, Component } from 'react';
 import { View, Dimensions, Image, Animated, ImageProps, ActivityIndicator, Text, Platform, TouchableOpacity, TextInput,StyleSheet } from 'react-native'
 import WaterfallFlow from 'react-native-waterfall-flow'
-
+import { useNavigation } from '@react-navigation/native';
 
 const window = Dimensions.get('window')
 
@@ -14,7 +14,7 @@ export default function Search() {
     setSearchText(value);
     console.log(searchText);
   };
-
+  const navigation=useNavigation();
  
   return(
       <View style={styles.container}>
@@ -25,7 +25,7 @@ export default function Search() {
           onChangeText={(text)=>onChangeText(text)}
           returnKeyType="search"
       />
-      {searchText?(<TestWaterfallFlowScreen searchText={searchText}/>):(<Text>空空如也~</Text>)}
+      {searchText?(<TestWaterfallFlowScreen searchText={searchText} navigation={navigation}/>):(<Text>空空如也~</Text>)}
       </View>
   )
 }
@@ -90,6 +90,7 @@ class TestWaterfallFlowScreen extends Component {
           const newData = cardList.map(item => {
             const width = item.images.width;
             const height = item.images.height;
+            const base64 = item.images.base64
             const thumbURL=item.images.thumbURL;
             const id=item.reviewer_id;
             const username=item.username;
@@ -99,7 +100,8 @@ class TestWaterfallFlowScreen extends Component {
             return {
               width: cardWidth,
               height: Math.floor((height / width) * cardWidth),
-              thumbURL:thumbURL,
+              thumbURL: thumbURL,
+              base64: "data:image/png;base64," + base64,
               id:id,
               userImg:userImg,
               username:username,
@@ -150,7 +152,7 @@ class TestWaterfallFlowScreen extends Component {
         onRefresh={() => this.loadData(1, true)}
         renderItem={({ item, index, columnIndex }) => {
           return (
-            <Card item={item} index={index} columnIndex={columnIndex} />
+            <Card item={item} index={index} columnIndex={columnIndex} navigation={this.props.navigation}/>
           )
         }}
       />
@@ -159,10 +161,7 @@ class TestWaterfallFlowScreen extends Component {
 }
 
 class Card extends PureComponent {
-  detailPage = (item) => {
-    console.log(item.title);
-    console.log(888);
-  };
+ 
   render() {
     const { item, index, columnIndex } = this.props
     return (
@@ -170,17 +169,21 @@ class Card extends PureComponent {
         <TouchableOpacity 
           style={{ backgroundColor: '#fff', flex: 1 ,marginBottom:5,marginLeft:columnIndex===0?0:5,borderRadius:5}} 
           activeOpacity={1}
-          onPress={()=> this.detailPage(item) }
+          onPress={()=>  this.props.navigation.navigate("Details",{itemId:item.id})}
         >
-          <Image 
-            source={{ uri: item.thumbURL, width: item.width, height: item.height }} 
-            resizeMode="cover" 
+          <Image
+            source={{
+              uri: item.thumbURL ? item.thumbURL : item.base64,
+              width: item.width,
+              height: item.height,
+            }}
+            resizeMode="cover"
           />
           <Text style={{fontWeight:500,padding:5}}>{item.title}</Text>
           <View style={{flexDirection: 'row', alignItems: 'center',justifyContent: 'flex-end',padding:5}}>
-            <Text style={{fontSize:12,color:'gray',marginRight:5}}>路西西</Text>
+            <Text style={{fontSize:12,color:'gray',marginRight:5}}>{item.username}</Text>
             <View style={{width: 20,height: 20,borderRadius: 10, overflow: 'hidden'}}>
-                <Image source={require('../../assets/person1.jpg')} style={{ flex: 1,resizeMode: 'cover', width: null,
+                <Image source={{uri:item.userImg}} style={{ flex: 1,resizeMode: 'cover', width: null,
       height: null,}}/>
             </View>
           </View>
@@ -218,34 +221,6 @@ class Empty extends PureComponent {
   }
 }
 
-// class FadeImage extends Component<ImageProps> {
-
-//   constructor(props) {
-//     super(props)
-//     this._animatedValue = new Animated.Value(0)
-//   }
-
-//   render() {
-//     const { style, onLoadEnd } = this.props
-//     if (Platform.OS === 'android') {
-//       return <Image {...this.props}/>
-//     }
-//     return (
-//       <Animated.Image 
-//         {...this.props}
-//         onLoadEnd={() => {
-//           Animated.timing(this._animatedValue, {
-//             toValue: 1,
-//             duration: 200,
-//             useNativeDriver: true
-//           }).start()
-//           onLoadEnd && onLoadEnd()
-//         }}
-//         style={[style, { opacity: this._animatedValue }]} 
-//       />
-//     )
-//   }
-// }
 
 const styles = StyleSheet.create({
   container: {
