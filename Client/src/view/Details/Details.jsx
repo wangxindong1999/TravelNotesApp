@@ -64,7 +64,6 @@ export default function Details(props) {
     ref.current.parentNode.style.padding = "0"
     getDetail(id)
       .then((res) => {
-        console.log(res)
         settraveldetail(
           res.data.map((item) => {
             return {

@@ -100,7 +100,11 @@ export default function Details() {
           <Ionicons name="chevron-back" size={32} color="gray" />
         </TouchableOpacity>
         {/* 用户头像 */}
-        <Image source={{ uri: userAvatar }} style={styles.userImage} />
+        {/*uri不能为空值，因此使用“123456”作为占位符，防止空值报错*/}
+        <Image
+          source={{ uri: userAvatar ? userAvatar : "123456" }}
+          style={styles.userImage}
+        />
         {/* 用户名 */}
         <Text style={styles.username}>{username}</Text>
         {/* 分享按钮 */}
