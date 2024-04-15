@@ -83,22 +83,29 @@ export default class TestWaterfallFlowScreen extends Component {
             const width = item.images.width
             const height = item.images.height
             const thumbURL = item.images.thumbURL
+            const all_thumbURL = item.all_images.map((image) => image.thumbURL)
             const base64 = item.images.base64
+            const all_base64 = item.all_images.map((image) => image.base64)
             const id = item.reviewer_id
             const username = item.username
             const userImg = item.userImg
             const cardWidth = Math.floor(window.width / 2)
             const title = item.title
+            const content = item.content
+            console.log(all_thumbURL);
             // console.log(item.images, "dwadawd")
             return {
               width: cardWidth,
               height: Math.floor((height / width) * cardWidth),
               thumbURL: thumbURL,
+              all_thumbURL: all_thumbURL,
               base64: "data:image/png;base64," + base64,
+              all_base64: all_base64,
               id: id,
               userImg: userImg,
               username: username,
               title: title,
+              content: content,
             }
           })
 
@@ -175,7 +182,18 @@ class Card extends PureComponent {
           }}
           activeOpacity={1}
 
-          onPress={()=>  this.props.navigation.navigate("Details",{itemId:item.id}) }
+          onPress={()=>  this.props.navigation.navigate("Details",
+          { itemId: item.id,
+            thumbURL: item.thumbURL,
+            all_thumbURL: item.all_thumbURL,
+            base64: item.base64,
+            all_base64: item.all_base64,
+            userImg: item.userImg,
+            username: item.username,
+            title: item.title,
+            content: item.content,
+            postedAt: item.postedAt,
+          }) }
 
         >
           <Image

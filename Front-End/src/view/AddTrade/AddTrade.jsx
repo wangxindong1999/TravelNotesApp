@@ -88,7 +88,7 @@ export default function AddTrade() {
     )
     const returnImage = {
       // uri: compressedImage.uri,
-      thumbURL: compressedImage.uri,
+      // thumbURL: compressedImage.uri,
       base64: image.base64,
       height: image.height/(image.width/300),
       width: 300

@@ -80,7 +80,8 @@ const styles = StyleSheet.create({
     width: wp("100%"),
     height: hp('38%'),
     marginTop: 20,
-    backgroundColor: 'rgba(208, 208, 208, .6)',
+    backgroundColor: 'white',
+    // backgroundColor: 'rgba(208, 208, 208, .6)',
     // borderColor: 'black',
     // borderWidth: 2
   },

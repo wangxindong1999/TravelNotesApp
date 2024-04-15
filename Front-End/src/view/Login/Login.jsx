@@ -61,7 +61,8 @@ export default function Login() {
       alert("登录成功")
       navigation.navigate("Home")
     } else {
-      alert(data.error)
+      const data = await response.json();
+      alert(data.message)
     }
 }
 

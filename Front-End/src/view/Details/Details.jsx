@@ -25,68 +25,65 @@ export default function Details() {
   const navigation = useNavigation();
   const route = useRoute();
   // console.log(route.params);
-  const postId = route.params.itemId;
-  const url = route.params.url;
+  // const postId = route.params.itemId;
+  // const url = route.params.url;
   // console.log(url);
-  const images = route.params.all_url;
+  // const images = route.params.all_url;
+  // const images = route.params.all_base64;
+  const images = route.params.all_base64 ? route.params.all_base64 : route.params.all_thumbURL;
+  // console.log(images);
   const userImg = route.params.userImg;
-  console.log(userImg);
-  // console.log(all_url);
-  // console.log(post_id);
-  // const [images, setImages] = useState([
-  //   require("../../assets/1.jpg"),
-  //   require("../../assets/2.jpg"),
-  //   require("../../assets/3.jpg"),
-  // ]);
+  const username = route.params.username;
+  const title = route.params.title;
+  const content = route.params.content;
+  const postedAt = route.params.postedAt;
   const user = useSelector(selectUser);
-  const [username, setUsername] = useState('');
-  // const [userAvatar, setUserAvatar] = useState('');
-  // const [images, setImages] = useState([url]);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  // const [username, setUsername] = useState('');
+  // const [title, setTitle] = useState('');
+  // const [content, setContent] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // 获取图片
-        const response = await axios.get(
-          `http://10.0.2.2:3000/posts/${postId}`
-        )
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       // 获取图片
+  //       const response = await axios.get(
+  //         `http://10.0.2.2:3000/posts/${postId}`
+  //       )
         // console.log(response.data);
         // console.log("0");
         // console.log("1", response.data.images);
         // const thumbURLs = response.data.images.map(image => image.thumbURL)
         // setImages(thumbURLs)
-        const thumbURLs = response.data.images.map((image) =>
-          image.thumbURL
-            ? image.thumbURL
-            : `data:image/jpeg;base64,${image.base64}`
-        )
-        setImages(thumbURLs)
+        // const thumbURLs = response.data.images.map((image) =>
+        //   image.thumbURL
+        //     ? image.thumbURL
+        //     : `data:image/jpeg;base64,${image.base64}`
+        // )
+        // setImages(thumbURLs)
         // console.log("2",thumbURLs);
         // console.log("3",images);
         // console.log("4");
         // setImages(response.data.images.map(image => `data:image/jpeg;base64,${image.base64}`))
 
         // 获取文章标题和内容
-        setTitle(response.data.title)
-        setContent(response.data.content)
+        // setTitle(response.data.title)
+        // setContent(response.data.content)
 
-        // 获取用户名和头像
-        const userId = response.data.user
-        const userResponse = await axios.get(
-          `http://10.0.2.2:3000/users/${userId}`
-        )
+        // // 获取用户名和头像
+        // const userId = response.data.user
+        // const userResponse = await axios.get(
+        //   `http://10.0.2.2:3000/users/${userId}`
+        // )
         // console.log(userResponse.data);
-        setUsername(userResponse.data.username)
+        // setUsername(userResponse.data.username)
         // setUserAvatar(userResponse.data.userImg)
         // setUserAvatar(`data:image/jpeg;base64,${userResponse.data.userImg}`)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    fetchData()
-  }, [])
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  //   fetchData()
+  // }, [])
 
   const [activeSlide, setActiveSlide] = useState(0);
   const updateActiveSlide = (index) => {
@@ -113,7 +110,7 @@ export default function Details() {
         {/* 用户头像 */}
         {/*uri不能为空值，因此使用“123456”作为占位符，防止空值报错*/}
         <Image
-          source={{ uri: userAvatar ? userAvatar : "123456" }} // userImg
+          source={{ uri: userImg ? userImg : "123456" }} // userImg
           style={styles.userImage}
         />
         {/* 用户名 */}
@@ -126,19 +123,19 @@ export default function Details() {
 
       <ScrollView style={{ width: wp("100%") }}>
         {/* 轮播图 */}
-        {images.length > 0 && (
+        {/* {images.length > 0 && ( */}
           <CarouselComponent
             images={images}
             activeSlide={activeSlide}
             updateActiveSlide={updateActiveSlide}
           />
-        )}
+        {/* )} */}
         <View style={styles.articleContainer}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.content}>{content}</Text>
         </View>
         <View style={styles.postedTimeContainer}>
-          <Text style={styles.postedTime}>发布时间</Text>
+          <Text style={styles.postedTime}>{postedAt?`发布时间：${postedAt}`:"尚未发布"}</Text>
         </View>
       </ScrollView>
     </View>
