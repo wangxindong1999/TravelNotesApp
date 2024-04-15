@@ -48,12 +48,38 @@ router.post("/indexList", async function (req, res) {
             base64: null,
           }
         }
+        //获取所有图片
+        let all_images = []
+        post.images.forEach((item) => {
+          let image = {}
+          if (item.thumbURL) {
+            image = {
+              width: item.width,
+              height: item.height,
+              thumbURL: item.thumbURL,
+              base64: null,
+            }
+          } else {
+            const imagePath = "img/" + item.base64 + ".png"
+            const imageBuffer = fs.readFileSync(imagePath)
+            image = {
+              width: item.width,
+              height: item.height,
+              thumbURL: null,
+              base64:
+                "data:image/jpeg;base64," + imageBuffer.toString("base64"),
+            }
+          }
+          all_images.push(image)
+        })
+
         return {
           reviewer_id: post._id,
           username: post.username,
           title: post.title,
           content: post.content,
           images: image,
+          all_images: all_images,
           status: post.status,
           created_at: post.createdAt,
           posted_at: post.postedAt,

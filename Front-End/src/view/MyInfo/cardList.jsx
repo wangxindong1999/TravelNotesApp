@@ -102,25 +102,33 @@ class CardList extends Component {
             const width = item.images.width
             const height = item.images.height
             const thumbURL = item.images.thumbURL
-//             const all_thumbURL = item.all_images.map((image) => image.thumbURL)
+            const all_thumbURL = item.all_images.map((image) => image.thumbURL)
             const base64 = item.images.base64
+            const all_base64 = item.all_images.map((image) => image.base64)
             const id = item.reviewer_id
             const username = item.username
             const userImg = item.userImg
             const cardWidth = Math.floor(window.width / 2)
             const title = item.title
+            const content = item.content
+            const postedAt = item.postedAt
             return {
               width: cardWidth,
               height: Math.floor((height / width) * cardWidth),
               thumbURL: thumbURL,
-//               all_thumbURL: all_thumbURL,
+              all_thumbURL: all_thumbURL,
               base64: "data:image/png;base64," + base64,
+              // base64: base64,
+              // all_base64: all_base64.map((base64) => "data:image/png;base64," + base64),
+              all_base64: all_base64,
               id: id,
               userImg: userImg,
               username: username,
               title: title,
               reason: item.reason,
               reason_type: item.reason_type,
+              content: content,
+              postedAt: postedAt,
             }
           })
 
@@ -209,11 +217,15 @@ class Card extends PureComponent {
             // console.log(item.id)
             this.props.navigation.navigate("Details",
             { itemId: item.id,
-              url: item.thumbURL,
-//               all_url: item.all_thumbURL,
+              thumbURL: item.thumbURL,
+              all_thumbURL: item.all_thumbURL,
+              base64: item.base64,
+              all_base64: item.all_base64,
               userImg: item.userImg,
-              // username: item.username,
-              // title: item.title
+              username: item.username,
+              title: item.title,
+              content: item.content,
+              postedAt: item.postedAt,
             })
           }}
         >
