@@ -83,7 +83,7 @@ export default function MyInfo() {
             <Person userImg={userImg} username={username}/>
             {/* <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button> */}
             <ButtonGroup activeIndex={activeIndex} handlePress={handlePress.bind(this)} />
-            <CardList username={username} activeIndex={activeIndex} navigation={navigation}/>
+            <CardList username='admin' activeIndex={activeIndex} navigation={navigation}/>
             {/* 其他用户暂时没有数据，将username统一为‘’username */}
 
         </>

@@ -12,6 +12,8 @@ const person=require('./routers/person')
 const deletePost=require('./routers/deletePost')
 const publishPost=require('./routers/pubulishPost')
 const logout=require('./routers/logout')
+const updateName=require('./routers/updateName')
+const updatePassword=require('./routers/updatePassword')
 require('dotenv').config();
 const uri = process.env.MONGODB_URI;
 
@@ -33,6 +35,8 @@ app.use(person);
 app.use(deletePost);
 app.use(publishPost);
 app.use(logout);
+app.use(updateName);
+app.use(updatePassword)
 
 
 // 注册

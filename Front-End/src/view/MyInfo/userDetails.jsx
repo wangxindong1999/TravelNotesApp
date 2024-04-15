@@ -1,24 +1,66 @@
 import React ,{useState,useEffect}from 'react';
 import {View,StyleSheet, TouchableOpacity,Image, Button,Text,TextInput} from "react-native"
-
+import { useNavigation } from '@react-navigation/native';
 export default function UserDetails({route}){
     const { uname, uImg ,index} = route.params;
-    const [value, onChangeText] = useState(uname);
+    const [value, setText] = useState(uname);
     const [img, changeImg] = useState(uImg);
-    const [searchText, setSearchText] = useState('');
     const [prePassword,setPrePassword]=useState('');
     const [newPassword,setNewPassword]=useState('');
-    console.log(uname, uImg ,index);
-    const handleSearch = () => {
-        setSearchText(value);
-        // console.log(searchText);
-    };
-    useEffect(() => {
-        console.log(searchText);
-    }, [searchText]);
+    const navigation=useNavigation();
     const submitPassword = () => {
         console.log(prePassword,newPassword);
     };
+    updateName=async ()=>{
+        console.log(value);
+        try {
+            const response = await fetch("http://10.0.2.2:3000/updateName", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                username:uname,
+                newUsername:value
+              }),
+            })
+      
+            if (response.ok) {
+                    alert("修改成功！");
+                    navigation.navigate("Homes")}
+            else{
+                alert("修改失败！")
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+    updatePassword=async ()=>{
+      console.log(value);
+      try {
+          const response = await fetch("http://10.0.2.2:3000/updatePassword", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username:uname,
+              prePassword:prePassword,
+              newPassword:newPassword
+            }),
+          })
+    
+          if (response.ok) {
+                  alert("修改成功！");
+                  navigation.navigate("Homes")}
+          else{
+              alert("修改失败！")
+          }
+      }catch(err){
+          console.log(err);
+      }
+  }
     return(<View style={styles.container}>
         {index==0&&( <View >
             <TouchableOpacity onPress={() => console.log(2568)}>
@@ -34,9 +76,9 @@ export default function UserDetails({route}){
                 <TextInput
                 placeholder={uname}
                 style={styles.search}
-                onChangeText={(value)=>onChangeText(value)}
+                onChangeText={(value)=>setText(value)}
                 returnKeyType="done"/>
-                 <Button title='确认修改' onPress={handleSearch}></Button>
+                 <Button title='确认修改' onPress={()=>{this.updateName()}}></Button>
             </View>)}
       {index==2&&(<View>
         <TextInput
@@ -51,7 +93,7 @@ export default function UserDetails({route}){
           onChangeText={(text)=>setNewPassword(text)}
           returnKeyType="done"
       />
-      <Button title="确认修改" onPress={submitPassword} 
+      <Button title="确认修改" onPress={()=>{this.updatePassword()}} 
       ></Button>
       </View>
       )}

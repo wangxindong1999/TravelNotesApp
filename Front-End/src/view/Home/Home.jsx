@@ -5,18 +5,11 @@ import { Text, Button, View,StatusBar,StyleSheet ,TextInput,TouchableOpacity,Mag
 import { useNavigation } from "@react-navigation/native"
 import Title from "./title"
 import TestWaterfallFlowScreen from "./TestWaterfallFlowScreen"
-import { useFocusEffect } from '@react-navigation/native';
 
 
 
 export default function Home() {
   const navigation = useNavigation();
-  useFocusEffect(
-    React.useCallback(() => {
-        // 在这里执行您想要在每次切换到该页面时执行的逻辑
-        console.log('Home tab focused');
-    }, [])
-  );
 
   return (
     <View style={styles.container}>
