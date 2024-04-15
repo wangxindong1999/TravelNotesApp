@@ -1,4 +1,5 @@
 
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
@@ -201,7 +202,6 @@ app.get("/users/:id", async function (req, res) {
 
     if (!user) {
       return res.status(404).json({ message: "User not found" })
-
     }
 
     return res.json(user)

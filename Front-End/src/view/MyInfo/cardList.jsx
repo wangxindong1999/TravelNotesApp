@@ -70,7 +70,7 @@ class CardList extends Component {
     }
     try {
       const { activeIndex } = this.props
-      console.log(activeIndex)
+      // console.log(activeIndex)
       const response = await fetch("http://10.0.2.2:3000/myInfo", {
         method: "POST",
         headers: {
@@ -85,6 +85,7 @@ class CardList extends Component {
       })
       if (response.ok) {
         const cardList = await response.json()
+        // console.log("cardlist", cardList);
         if (cardList.length === undefined) {
           this.loading = false
           this.page = 1
@@ -101,23 +102,33 @@ class CardList extends Component {
             const width = item.images.width
             const height = item.images.height
             const thumbURL = item.images.thumbURL
+            const all_thumbURL = item.all_images.map((image) => image.thumbURL)
             const base64 = item.images.base64
+            const all_base64 = item.all_images.map((image) => image.base64)
             const id = item.reviewer_id
             const username = item.username
             const userImg = item.userImg
             const cardWidth = Math.floor(window.width / 2)
             const title = item.title
+            const content = item.content
+            const postedAt = item.postedAt
             return {
               width: cardWidth,
               height: Math.floor((height / width) * cardWidth),
               thumbURL: thumbURL,
+              all_thumbURL: all_thumbURL,
               base64: "data:image/png;base64," + base64,
+              // base64: base64,
+              // all_base64: all_base64.map((base64) => "data:image/png;base64," + base64),
+              all_base64: all_base64,
               id: id,
               userImg: userImg,
               username: username,
               title: title,
               reason: item.reason,
               reason_type: item.reason_type,
+              content: content,
+              postedAt: postedAt,
             }
           })
 
@@ -186,6 +197,7 @@ class CardList extends Component {
 class Card extends PureComponent {
   render() {
     const { item, index, columnIndex } = this.props
+    // console.log({item});
     const { activeIndex } = this.props
     const reason = "涉及违规词汇"
     return (
@@ -200,10 +212,21 @@ class Card extends PureComponent {
           }}
           activeOpacity={1}
           onPress={() => {
-            console.log(activeIndex)
+            // console.log(activeIndex)
             // console.log(this.props.navigation)
-            console.log(item.id)
-            this.props.navigation.navigate("Details", { itemId: item.id })
+            // console.log(item.id)
+            this.props.navigation.navigate("Details",
+            { itemId: item.id,
+              thumbURL: item.thumbURL,
+              all_thumbURL: item.all_thumbURL,
+              base64: item.base64,
+              all_base64: item.all_base64,
+              userImg: item.userImg,
+              username: item.username,
+              title: item.title,
+              content: item.content,
+              postedAt: item.postedAt,
+            })
           }}
         >
           <Image
@@ -238,7 +261,7 @@ class Card extends PureComponent {
 
 class Operate extends PureComponent {
   deleteItem = async (id) => {
-    console.log(id, "id")
+    // console.log(id, "id")
     try {
       // http://10.0.2.2:3000/deletePost
       const response = await fetch("http://10.0.2.2:3000/deletePost", {
@@ -283,6 +306,7 @@ class Operate extends PureComponent {
 
       if (response.ok) {
         const message = await response.json()
+        // console.log(message)
         if (message.message === '发布成功!') {
           console.log('帖子发布成功！');
           alert("发布成功！");
@@ -291,7 +315,7 @@ class Operate extends PureComponent {
         } else if(message.message === '未找到匹配的帖子或发布失败！') {
           console.log('未找到匹配的帖子或发布失败！');
           alert("发布失败！")
-      }
+        }
       }
     } catch (error) {
       console.error("Error fetching data:", error)
