@@ -9,6 +9,8 @@ const indexList=require('./routers/indexList')
 const search=require('./routers/search')
 const person=require('./routers/person')
 const deletePost=require('./routers/deletePost')
+const publishPost=require('./routers/pubulishPost')
+const logout=require('./routers/logout')
 require('dotenv').config();
 const uri = process.env.MONGODB_URI;
 
@@ -28,6 +30,8 @@ app.use(search);
 app.use(myInfo);
 app.use(person);
 app.use(deletePost);
+app.use(publishPost);
+app.use(logout);
 
 // 注册
 app.post('/register', async function (req, res) {
@@ -103,25 +107,27 @@ app.post('/login', async function(req, res) {
   });
 
 // 游记
-app.post('/posts', async function(req, res) {
-    const title = req.body.title;
-    const content = req.body.content;
-    const images = req.body.images;
-    const status = req.body.status;
-    const username = req.body.username;
+app.get('/posts/:id', async function(req, res) {
+    // const title = req.body.title;
+    // const content = req.body.content;
+    // const images = req.body.images;
+    // const status = req.body.status;
+    // const username = req.body.username;
     
     try {
-      let newPost = new Posts({
-        title: title,
-        content: content,
-        images: images,
-        status: status,
-        username: username,
-      });
+      // let newPost = new Posts({
+      //   title: title,
+      //   content: content,
+      //   images: images,
+      //   status: status,
+      //   username: username,
+      // });
+      const post=await Posts.findById(req.params.id);
+      if(!post){
+        return res.status.apply(404).json({message:'Post not found'})
+      }
+      return res.json(post);
   
-      await newPost.save();
-      
-      res.json({ message: 'Post created successfully' });
     } catch(err) {
       console.error('Error occurred during post creation:', err);
       res.status(500).json({ message: 'Could not create post', error: err.message });

@@ -161,6 +161,7 @@ class CardList extends Component {
               index={index}
               columnIndex={columnIndex}
               navigation={this.props.navigation}
+              loadData={this.loadData}
             />
 
           )
@@ -188,7 +189,7 @@ class Card extends PureComponent {
           activeOpacity={1}
           onPress={() => {
             console.log(activeIndex)
-            console.log(this.props.navigation)
+            // console.log(this.props.navigation)
             console.log(item.id)
             this.props.navigation.navigate("Details",{itemId:item.id})
           }}
@@ -203,7 +204,7 @@ class Card extends PureComponent {
           />
 
           <Text style={{ fontWeight: 500, padding: 5 }}>{item.title}</Text>
-          <ConnectedOperate navigation={this.props.navigation} item={item}/>
+          <ConnectedOperate navigation={this.props.navigation} item={item} loadData={this.props.loadData}/>
           {activeIndex === 2 && (
             <Text
               style={{
@@ -239,13 +240,52 @@ class Operate extends PureComponent {
       })
 
       if (response.ok) {
-        const message = await response.json()
-        console.log(message)
+        const messages = await response.json()
+        if (messages.message === '删除成功！') {
+          console.log('帖子删除成功！');
+          alert("删除成功！");
+          this.props.loadData(1,true);
+          
+        } else if(messages.message === '未找到匹配的帖子或删除失败！') {
+          console.log('未找到匹配的帖子或删除失败！');
+          alert("删除失败！")
+      }
       }
     } catch (error) {
       console.error("Error fetching data:", error)
     }
   }
+
+  publishItem = async (id) => {
+    console.log(id, "id")
+    try {
+      const response = await fetch("http://10.0.2.2:3000/publishPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId: id,
+        }),
+      })
+
+      if (response.ok) {
+        const message = await response.json()
+        if (message.message === '发布成功!') {
+          console.log('帖子发布成功！');
+          alert("发布成功！");
+          this.props.loadData(1,true);
+          
+        } else if(message.message === '未找到匹配的帖子或发布失败！') {
+          console.log('未找到匹配的帖子或发布失败！');
+          alert("发布失败！")
+      }
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error)
+    }
+  }
+
 
   render() {
     // console.log(this.props.item.id)
@@ -294,17 +334,19 @@ class Operate extends PureComponent {
       </TouchableOpacity>
       {/* 发布 */}
       {activeIndex === 3 && (
-        <View
-          style={{
-            borderRadius: 10,
-            backgroundColor: "#4AB05C",
-            width: 60,
-            height: 20,
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "#fff" }}>发布</Text>
+        <TouchableOpacity onPress={()=>{this.publishItem(this.props.item.id)}}>
+             <View
+              style={{
+              borderRadius: 10,
+              backgroundColor: "#4AB05C",
+              width: 60,
+              height: 20,
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "#fff" }}>发布</Text>
         </View>
+        </TouchableOpacity>
       )}
     </View>)
   }

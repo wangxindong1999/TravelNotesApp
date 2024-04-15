@@ -13,6 +13,7 @@ export default function Details() {
   const navigation = useNavigation();
   const route = useRoute();
   const postId = route.params.itemId;
+  console.log(postId);
   // const [images, setImages] = useState([
   //   require("../../assets/1.jpg"),
   //   require("../../assets/2.jpg"),

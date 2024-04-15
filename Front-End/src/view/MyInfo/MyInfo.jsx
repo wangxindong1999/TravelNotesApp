@@ -28,6 +28,7 @@ export default function MyInfo(){
   const [userInfo, setUserInfo] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
+      console.log(5555);
         try {
             const response = await fetch("http://10.0.2.2:3000/person", {
                 method: "POST",
@@ -37,13 +38,18 @@ export default function MyInfo(){
                 credentials: 'include' // 包含凭据（包括 cookie）
             });
             if (response.ok) {
-                const person = await response.json();
+              console.log(2666)
+              const person = await response.json();
+              if(person.message=='0000'){
+                alert("请登录！");
+                navigation.navigate("Login");
+              }else if(message=='1111'){
+                console.log("用户处于登录状态！")
                 setUsername(person.username);
                 setUserImg(person.userImg);
                 setUserInfo(true);
-            } else {
-                alert("请登录！");
-            }
+              }
+            } 
         } catch (error) {
             console.error('Error:', error);
         }
@@ -63,6 +69,7 @@ const navigation = useNavigation(); // 使用 useNavigation 钩子获取导航�
             {/* <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button> */}
             <ButtonGroup activeIndex={activeIndex} handlePress={handlePress.bind(this)} />
             <CardList username='username' activeIndex={activeIndex} navigation={navigation}/>
+            {/* 其他用户暂时没有数据，将username统一为‘’username */}
         </>
     ) : (
         <Text>请登录</Text>

@@ -1,18 +1,21 @@
-import React ,{useState}from 'react';
+import React ,{useState,useEffect}from 'react';
 import {View,StyleSheet, TouchableOpacity,Image, Button,Text,TextInput} from "react-native"
 
 export default function UserDetails({route}){
     const { uname, uImg ,index} = route.params;
-    const [value, onChangeText] = React.useState(uname);
-    const [img, changeImg] = React.useState(uImg);
-    const [searchText, setSearchText] = React.useState('');
-    const [prePassword,setPrePassword]=React.useState('');
-    const [newPassword,setNewPassword]=React.useState('');
+    const [value, onChangeText] = useState(uname);
+    const [img, changeImg] = useState(uImg);
+    const [searchText, setSearchText] = useState('');
+    const [prePassword,setPrePassword]=useState('');
+    const [newPassword,setNewPassword]=useState('');
     console.log(uname, uImg ,index);
     const handleSearch = () => {
         setSearchText(value);
-        console.log(searchText);
+        // console.log(searchText);
     };
+    useEffect(() => {
+        console.log(searchText);
+    }, [searchText]);
     const submitPassword = () => {
         console.log(prePassword,newPassword);
     };
@@ -31,8 +34,8 @@ export default function UserDetails({route}){
                 <TextInput
                 placeholder={uname}
                 style={styles.search}
-                onChangeText={(text)=>onChangeText(text)}
-                returnKeyType="search"/>
+                onChangeText={(value)=>onChangeText(value)}
+                returnKeyType="done"/>
                  <Button title='确认修改' onPress={handleSearch}></Button>
             </View>)}
       {index==2&&(<View>
@@ -40,13 +43,13 @@ export default function UserDetails({route}){
           placeholder="请输入原密码"
           style={styles.search}
           onChangeText={(text)=>setPrePassword(text)}
-          returnKeyType="search"
+          returnKeyType="done"
       />
       <TextInput
           placeholder="请输入新密码"
           style={styles.search}
           onChangeText={(text)=>setNewPassword(text)}
-          returnKeyType="search"
+          returnKeyType="done"
       />
       <Button title="确认修改" onPress={submitPassword} 
       ></Button>
