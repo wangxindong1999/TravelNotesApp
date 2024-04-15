@@ -92,7 +92,7 @@ export default class TestWaterfallFlowScreen extends Component {
             const cardWidth = Math.floor(window.width / 2)
             const title = item.title
             const content = item.content
-            console.log(all_thumbURL);
+            console.log(all_thumbURL)
             // console.log(item.images, "dwadawd")
             return {
               width: cardWidth,
@@ -106,6 +106,7 @@ export default class TestWaterfallFlowScreen extends Component {
               username: username,
               title: title,
               content: content,
+              status: item.status,
             }
           })
 
@@ -153,9 +154,12 @@ export default class TestWaterfallFlowScreen extends Component {
         onRefresh={() => this.loadData(1, true)}
         renderItem={({ item, index, columnIndex }) => {
           return (
-
-            <Card item={item} index={index} columnIndex={columnIndex} navigation={this.props.navigation}/>
-
+            <Card
+              item={item}
+              index={index}
+              columnIndex={columnIndex}
+              navigation={this.props.navigation}
+            />
           )
         }}
       />
@@ -181,20 +185,21 @@ class Card extends PureComponent {
             borderRadius: 5,
           }}
           activeOpacity={1}
-
-          onPress={()=>  this.props.navigation.navigate("Details",
-          { itemId: item.id,
-            thumbURL: item.thumbURL,
-            all_thumbURL: item.all_thumbURL,
-            base64: item.base64,
-            all_base64: item.all_base64,
-            userImg: item.userImg,
-            username: item.username,
-            title: item.title,
-            content: item.content,
-            postedAt: item.postedAt,
-          }) }
-
+          onPress={() =>
+            this.props.navigation.navigate("Details", {
+              itemId: item.id,
+              thumbURL: item.thumbURL,
+              all_thumbURL: item.all_thumbURL,
+              base64: item.base64,
+              all_base64: item.all_base64,
+              userImg: item.userImg,
+              username: item.username,
+              title: item.title,
+              content: item.content,
+              postedAt: item.postedAt,
+              status: item.status,
+            })
+          }
         >
           <Image
             source={{
@@ -225,7 +230,7 @@ class Card extends PureComponent {
               }}
             >
               <Image
-                source={{uri:item.userImg}}
+                source={{ uri: item.userImg }}
                 style={{
                   flex: 1,
                   resizeMode: "cover",

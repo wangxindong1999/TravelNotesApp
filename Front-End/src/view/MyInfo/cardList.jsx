@@ -112,6 +112,7 @@ class CardList extends Component {
             const title = item.title
             const content = item.content
             const postedAt = item.postedAt
+            const status = item.status
             return {
               width: cardWidth,
               height: Math.floor((height / width) * cardWidth),
@@ -129,6 +130,7 @@ class CardList extends Component {
               reason_type: item.reason_type,
               content: content,
               postedAt: postedAt,
+              status: status,
             }
           })
 
@@ -227,6 +229,7 @@ class Card extends PureComponent {
               postedAt: item.postedAt,
               reason: item.reason,
               reason_type: item.reason_type,
+              status: item.status,
             })
           }}
         >

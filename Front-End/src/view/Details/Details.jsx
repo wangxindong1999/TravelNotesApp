@@ -23,11 +23,13 @@ import { selectUser } from "../../store/feature/userSlice"
 export default function Details() {
   const navigation = useNavigation()
   const route = useRoute()
+  console.log(route.params.status, "dwadwa")
   // const postId = route.params.itemId;
   // const url = route.params.url;
   // console.log(url);
   // const images = route.params.all_url;
   // const images = route.params.all_base64;
+  const status = route.params.status
   const images = route.params.all_base64[0]
     ? route.params.all_base64
     : route.params.all_thumbURL
@@ -136,15 +138,25 @@ export default function Details() {
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.content}>{content}</Text>
         </View>
-        <View style={styles.reasonContainer}>
-          <Text style={styles.reason}>！违规类型：{reason_type}</Text>
-          <Text style={styles.reason}>！违规原因：{reason}</Text>
-        </View>
-        {/* <View style={styles.postedTimeContainer}>
+        {status === "rejected" ? (
+          <View style={styles.reasonContainer}>
+            <Text style={styles.reason}>！违规类型：{reason_type}</Text>
+            <Text style={styles.reason}>！违规原因：{reason}</Text>
+          </View>
+        ) : null}
+        <View style={styles.postedTimeContainer}>
           <Text style={styles.postedTime}>
-            {postedAt ? `发布时间：${postedAt}` : "尚未发布"}
+            {status === "rejected"
+              ? "审核未通过"
+              : status === "committed"
+              ? "待审核"
+              : status === "published"
+              ? "已发布"
+              : status === "draft"
+              ? "草稿"
+              : null}
           </Text>
-        </View> */}
+        </View>
       </ScrollView>
     </View>
   )
