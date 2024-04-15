@@ -12,6 +12,8 @@ router.post('/logout', async function(req, res) {
         res.clearCookie('userId');
         res.clearCookie('username');
         res.clearCookie('userImg');
+        req.cookies = {}; // 清空 req.cookies 对象
+
 
         // 获取清除后剩余的 cookies
         const cookiesAfterClearing = req.cookies;

@@ -352,14 +352,6 @@ class Operate extends PureComponent {
             style={{ width: 20, height: 20 }}
           ></Image>
         </TouchableOpacity>
-      )}
-      {/* 删除 */}
-      <TouchableOpacity onPress={()=>{this.deleteItem(this.props.item.id)}}>
-        <Image
-          source={require("../../assets/delete.png")}
-          style={{ width: 20, height: 20 }}
-        ></Image>
-      </TouchableOpacity>
       {/* 发布 */}
       {activeIndex === 3 && (
         <TouchableOpacity onPress={()=>{this.publishItem(this.props.item.id)}}>
