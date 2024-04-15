@@ -6,6 +6,29 @@ export default function Person({route}) {
   const { username, userImg } = route.params;
   console.log(username,userImg)
   const navigation = useNavigation();
+ logout =async ()=>{
+  console.log(598)
+    try{
+      const response=await fetch('http://10.0.2.2:3000/logout',{
+        method:'POST',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: 'include' // 包含凭据（包括 cookie）
+      });
+      if(response.ok){
+        const messages=await response.json();
+        if(messages.message=="成功退出！"){
+          alert("成功退出！");
+          navigation.navigate("Homes")
+        }else {
+          alert("退出失败！")
+        }
+      }
+    }catch(err){
+      console.log(err);
+    }
+  }
   return (
     <View>
        <TouchableOpacity onPress={() => navigation.navigate('UserDetails', { uname: username,uImg:userImg, index:'0' })}>
@@ -26,7 +49,7 @@ export default function Person({route}) {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate('UserDetails', { uname: username,uImg:'', index:'2' })}>
-       <View style={styles.container}>
+        <View style={styles.container}>
             <Text style={{fontSize:20}}>修改密码</Text>
                 <Image
                   source={require('../../assets/right.png')}
@@ -35,9 +58,9 @@ export default function Person({route}) {
         </View>
         </TouchableOpacity>
 
-        <TouchableOpacity>
-         <View style={{borderRadius:10,backgroundColor:'#4AB05C',width:'80%',height:50,alignItems:'center',justifyContent:'center',
-         marginTop:'120%',marginLeft:'10%'}}>
+        <TouchableOpacity onPress={()=>{this.logout()}}>
+         <View  style={{borderRadius:10,backgroundColor:'#4AB05C',width:'80%',height:50,justifyContent:'center',alignItems:'center',
+         marginLeft:35,marginTop:300}}>
             <Text style={{color:'#fff'}}>退出登录</Text>
           </View>
         </TouchableOpacity>

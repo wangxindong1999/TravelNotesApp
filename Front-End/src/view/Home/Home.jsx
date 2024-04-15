@@ -5,9 +5,19 @@ import { Text, Button, View,StatusBar,StyleSheet ,TextInput,TouchableOpacity,Mag
 import { useNavigation } from "@react-navigation/native"
 import Title from "./title"
 import TestWaterfallFlowScreen from "./TestWaterfallFlowScreen"
+import { useFocusEffect } from '@react-navigation/native';
+
+
 
 export default function Home() {
   const navigation = useNavigation();
+  useFocusEffect(
+    React.useCallback(() => {
+        // 在这里执行您想要在每次切换到该页面时执行的逻辑
+        console.log('Home tab focused');
+    }, [])
+  );
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="transparent" barStyle="dark-content" translucent /> 
@@ -21,12 +31,6 @@ export default function Home() {
         <TestWaterfallFlowScreen navigation={navigation}/>
         {/* <Button title="click me" onPress={() => navigation.navigate('Login')}></Button> */}
     </View>
-    // <SafeAreaView style={{backgroundColor: "green", flex: 1, paddingTop:StatusBar.currentHeight}}>
-    //   <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
-    //   <Text>Home</Text>
-    //   <Button title="navigate to login" onPress={() => navigation.navigate('Login')}></Button>
-    //   <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button>
-    // </SafeAreaView>
   )
 }
 

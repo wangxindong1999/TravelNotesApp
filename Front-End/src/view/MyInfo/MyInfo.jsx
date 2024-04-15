@@ -11,6 +11,8 @@ import CardList from "./cardList"
 import { useSelector, useDispatch } from "react-redux"
 import { setActiveIndex } from "../../store/feature/activeIndexSlice"
 import { useNavigation } from "@react-navigation/native"
+import { useFocusEffect } from '@react-navigation/native';
+
 
 export default function MyInfo() {
   childRef = React.createRef()
@@ -30,53 +32,60 @@ export default function MyInfo() {
     //     console.log(596);
     // }
   }
-  // useEffect(() => {
-  //   console.log(activeIndex);
-  // }, [activeIndex]);
-  const [userInfo, setUserInfo] = useState(false)
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://10.0.2.2:3000/person", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // 包含凭据（包括 cookie）
-        })
-        if (response.ok) {
-          const person = await response.json()
-          setUsername(person.username)
-          setUserImg(person.userImg)
-          setUserInfo(true)
-        } else {
-          alert("请登录！")
-        }
-      } catch (error) {
-        console.error("Error:", error)
-      }
-    }
+  useFocusEffect(
+    React.useCallback(() => {
+        // 在这里执行您想要在每次切换到该页面时执行的逻辑
+        console.log('Home tab focused');
+        const fetchData = async () => {
 
-    fetchData()
-  }, [])
+          console.log(5555);
+            try {
+                const response = await fetch("http://10.0.2.2:3000/person", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include' // 包含凭据（包括 cookie）
+                });
+                if (response.ok) {
+                  console.log(2666)
+                  const person = await response.json();
+                  if(!person.username){
+                    alert("请登录！");
+                    navigation.navigate("Login");
+                  }else {
+                    console.log("用户处于登录状态！")
+                    setUsername(person.username);
+                    setUserImg(person.userImg);
+                    setUserInfo(true);
+                  }
+                } 
+            } catch (error) {
+                console.error('Error:', error);
+    
+            }
+        }
+    
+        fetchData()
+    }, [])
+);
+
+  const [userInfo, setUserInfo] = useState(false)
+  
   const navigation = useNavigation() // 使用 useNavigation 钩子获取导航属性
 
   return (
     <View style={styles.container}>
       {userInfo ? (
         <>
-          <Image source={bkImage} style={{ height: "30%" }} />
-          <Person userImg={userImg} username={username} />
-          {/* <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button> */}
-          <ButtonGroup
-            activeIndex={activeIndex}
-            handlePress={handlePress.bind(this)}
-          />
-          <CardList
-            username={username}
-            activeIndex={activeIndex}
-            navigation={navigation}
-          />
+
+            <Image source={bkImage} style={{ height: '30%' }} />
+            <Person userImg={userImg} username={username}/>
+            {/* <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button> */}
+            <ButtonGroup activeIndex={activeIndex} handlePress={handlePress.bind(this)} />
+            <CardList username={username} activeIndex={activeIndex} navigation={navigation}/>
+            {/* 其他用户暂时没有数据，将username统一为‘’username */}
+
         </>
       ) : (
         <Text>请登录</Text>

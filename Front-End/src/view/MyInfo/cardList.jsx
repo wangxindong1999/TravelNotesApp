@@ -102,7 +102,8 @@ class CardList extends Component {
             const width = item.images.width
             const height = item.images.height
             const thumbURL = item.images.thumbURL
-            const all_thumbURL = item.all_images.map((image) => image.thumbURL)
+//             const all_thumbURL = item.all_images.map((image) => image.thumbURL)
+            const base64 = item.images.base64
             const id = item.reviewer_id
             const username = item.username
             const userImg = item.userImg
@@ -112,11 +113,14 @@ class CardList extends Component {
               width: cardWidth,
               height: Math.floor((height / width) * cardWidth),
               thumbURL: thumbURL,
-              all_thumbURL: all_thumbURL,
+//               all_thumbURL: all_thumbURL,
+              base64: "data:image/png;base64," + base64,
               id: id,
               userImg: userImg,
               username: username,
               title: title,
+              reason: item.reason,
+              reason_type: item.reason_type,
             }
           })
 
@@ -173,6 +177,7 @@ class CardList extends Component {
               index={index}
               columnIndex={columnIndex}
               navigation={this.props.navigation}
+              loadData={this.loadData}
             />
           )
         }}
@@ -205,7 +210,7 @@ class Card extends PureComponent {
             this.props.navigation.navigate("Details",
             { itemId: item.id,
               url: item.thumbURL,
-              all_url: item.all_thumbURL,
+//               all_url: item.all_thumbURL,
               userImg: item.userImg,
               // username: item.username,
               // title: item.title
@@ -214,15 +219,16 @@ class Card extends PureComponent {
         >
           <Image
             source={{
-              uri: item.thumbURL,
+              uri: item.thumbURL !== null ? item.thumbURL : item.base64,
               width: item.width,
               height: item.height,
             }}
             resizeMode="cover"
           />
-
           <Text style={{ fontWeight: 500, padding: 5 }}>{item.title}</Text>
-          <ConnectedOperate navigation={this.props.navigation} item={item} />
+
+          <ConnectedOperate navigation={this.props.navigation} item={item} loadData={this.props.loadData}/>
+
           {activeIndex === 2 && (
             <Text
               style={{
@@ -232,7 +238,7 @@ class Card extends PureComponent {
                 marginBottom: 5,
               }}
             >
-              !{reason}
+              !{item.reason ? item.reason : reason}
             </Text>
           )}
         </TouchableOpacity>
@@ -257,13 +263,53 @@ class Operate extends PureComponent {
       })
 
       if (response.ok) {
-        const message = await response.json()
-        // console.log(message)
+        const messages = await response.json()
+        if (messages.message === '删除成功！') {
+          console.log('帖子删除成功！');
+          alert("删除成功！");
+          this.props.loadData(1,true);
+          
+        } else if(messages.message === '未找到匹配的帖子或删除失败！') {
+          console.log('未找到匹配的帖子或删除失败！');
+          alert("删除失败！")
+      }
       }
     } catch (error) {
       console.error("Error fetching data:", error)
     }
   }
+
+  publishItem = async (id) => {
+    console.log(id, "id")
+    try {
+      const response = await fetch("http://10.0.2.2:3000/publishPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId: id,
+        }),
+      })
+
+      if (response.ok) {
+        const message = await response.json()
+        // console.log(message)
+        if (message.message === '发布成功!') {
+          console.log('帖子发布成功！');
+          alert("发布成功！");
+          this.props.loadData(1,true);
+          
+        } else if(message.message === '未找到匹配的帖子或发布失败！') {
+          console.log('未找到匹配的帖子或发布失败！');
+          alert("发布失败！")
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error)
+    }
+  }
+
 
   render() {
     // console.log(this.props.item.id)
@@ -318,10 +364,12 @@ class Operate extends PureComponent {
             style={{ width: 20, height: 20 }}
           ></Image>
         </TouchableOpacity>
-        {/* 发布 */}
-        {activeIndex === 3 && (
-          <View
-            style={{
+      {/* 发布 */}
+      {activeIndex === 3 && (
+        <TouchableOpacity onPress={()=>{this.publishItem(this.props.item.id)}}>
+             <View
+              style={{
+
               borderRadius: 10,
               backgroundColor: "#4AB05C",
               width: 60,
@@ -330,10 +378,11 @@ class Operate extends PureComponent {
             }}
           >
             <Text style={{ color: "#fff" }}>发布</Text>
-          </View>
-        )}
-      </View>
-    )
+        </View>
+        </TouchableOpacity>
+      )}
+    </View>)
+
   }
 }
 
