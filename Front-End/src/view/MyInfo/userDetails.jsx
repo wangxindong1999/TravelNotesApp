@@ -1,16 +1,64 @@
 import React ,{useState,useEffect}from 'react';
 import {View,StyleSheet, TouchableOpacity,Image, Button,Text,TextInput} from "react-native"
 import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
+
 export default function UserDetails({route}){
     const { uname, uImg ,index} = route.params;
     const [value, setText] = useState(uname);
-    const [img, changeImg] = useState(uImg);
+    // const userImg=uImg.uri
+    const [img, changeImg] = useState(uname);
+    // console.log(img)
     const [prePassword,setPrePassword]=useState('');
     const [newPassword,setNewPassword]=useState('');
     const navigation=useNavigation();
     const submitPassword = () => {
         console.log(prePassword,newPassword);
     };
+
+    // 添加图片
+  handleSelectImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+      base64: true,
+    });
+
+    if (!result.canceled) {
+      // setImages(result.assets[0].base64);
+      console.log(result.assets[0].base64)
+      changeImg(result.assets[0].base64)
+    }
+  }
+
+
+    updateImage=async ()=>{
+      try {
+        const response = await fetch("http://10.0.2.2:3000/updateUserImg", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username:uname,
+            userImg:img
+          }),
+        })
+  
+        if (response.ok) {
+                alert("修改成功！");
+                navigation.navigate("Homes")}
+        else{
+            alert("修改失败！")
+        }
+    }catch(err){
+        console.log(err);
+    }
+    }
+
     updateName=async ()=>{
         console.log(value);
         try {
@@ -63,13 +111,14 @@ export default function UserDetails({route}){
   }
     return(<View style={styles.container}>
         {index==0&&( <View >
-            <TouchableOpacity onPress={() => console.log(2568)}>
-                <Image
-                  source={img}
-                  style={{ width: 300, height: 300,marginBottom:50,marginLeft:"10%" }}
-                />
+            <TouchableOpacity onPress={() => {this.handleSelectImage()}}>
+            <Image
+                source={img}
+                style={{ width: 300, height: 300, marginBottom: 50, marginLeft: "10%" }}
+            />
+
         </TouchableOpacity>
-        <Button title='确认修改' onPress={(item)=>changeImg(item)}></Button>
+        <Button title='确认修改' onPress={()=>this.updateImage()}></Button>
         </View>       )} 
         {index==1&&(
             <View>

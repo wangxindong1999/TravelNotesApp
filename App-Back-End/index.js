@@ -13,6 +13,9 @@ const publishPost = require("./routers/pubulishPost")
 const logout = require("./routers/logout")
 const updateName = require("./routers/updateName")
 const updatePassword = require("./routers/updatePassword")
+const getPost=require('./routers/getPost')
+const updatePost=require('./routers/updatePost')
+const updateUserImg=require('./routers/updateUserImg')
 require("dotenv").config()
 const uri = process.env.MONGODB_URI
 const fs = require("fs")
@@ -38,6 +41,9 @@ app.use(publishPost)
 app.use(logout)
 app.use(updateName)
 app.use(updatePassword)
+app.use(getPost)
+app.use(updatePost)
+app.use(updateUserImg)
 
 // 注册
 app.post("/register", async function (req, res) {
@@ -161,18 +167,13 @@ app.post("/posts", async function (req, res) {
 
 // 以id获取posts集合中数据
 app.get("/posts/:id", async function (req, res) {
-  // console.log(req);
-  // console.log(req.params);
-  // console.log(req.params.id);
-  // console.log(res.json());
+  console.log(req.params.id);
   try {
     const post = await Posts.findById(req.params.id)
-    // console.log(post);
+    console.log(post);
     if (!post) {
       return res.status(404).json({ message: "Post not found" })
     }
-    // console.log(res.json(post));
-    // console.log(post, "156161")
     const newpost = post.images.map((item) => {
       return {
         width: item.width,
@@ -184,6 +185,7 @@ app.get("/posts/:id", async function (req, res) {
       }
     })
     post.images = newpost
+    console.log(post.images)
     return res.json(post)
   } catch (err) {
     console.log(err)
