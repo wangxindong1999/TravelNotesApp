@@ -25,7 +25,8 @@ export default function Search() {
           onChangeText={(text)=>onChangeText(text)}
           returnKeyType="search"
       />
-      {searchText?(<TestWaterfallFlowScreen searchText={searchText} navigation={navigation}/>):(<Text>空空如也~</Text>)}
+      {searchText?(<TestWaterfallFlowScreen searchText={searchText} navigation={navigation}/>):
+      (<Text style={{marginLeft:170,marginTop:250}}>空空如也~</Text>)}
       </View>
   )
 }
@@ -88,25 +89,33 @@ class TestWaterfallFlowScreen extends Component {
         const cardList = await response.json();
         if (Array.isArray(cardList) && cardList.length !== 0) {
           const newData = cardList.map(item => {
-            const width = item.images.width;
-            const height = item.images.height;
+            const width = item.images.width
+            const height = item.images.height
+            const thumbURL = item.images.thumbURL
+            const all_thumbURL = item.all_images.map((image) => image.thumbURL)
             const base64 = item.images.base64
-            const thumbURL=item.images.thumbURL;
-            const id=item.reviewer_id;
-            const username=item.username;
-            const userImg=item.userImg;
-            const cardWidth = Math.floor(window.width / 2);
-            const title=item.title;
+            const all_base64 = item.all_images.map((image) => image.base64)
+            const id = item.reviewer_id
+            const username = item.username
+            const userImg = item.userImg
+            const cardWidth = Math.floor(window.width / 2)
+            const title = item.title
+            const content = item.content
+            console.log(all_thumbURL)
+            // console.log(item.images, "dwadawd")
             return {
               width: cardWidth,
               height: Math.floor((height / width) * cardWidth),
               thumbURL: thumbURL,
+              all_thumbURL: all_thumbURL,
               base64: "data:image/png;base64," + base64,
-              id:id,
-              userImg:userImg,
-              username:username,
-              title:title
-            };
+              all_base64: all_base64,
+              id: id,
+              userImg: userImg,
+              username: username,
+              title: title,
+              content: content,
+              status: item.status,}
           });
           const noMore = newData.length < this.pageSize;
           this.loading = false;
@@ -169,7 +178,21 @@ class Card extends PureComponent {
         <TouchableOpacity 
           style={{ backgroundColor: '#fff', flex: 1 ,marginBottom:5,marginLeft:columnIndex===0?0:5,borderRadius:5}} 
           activeOpacity={1}
-          onPress={()=>  this.props.navigation.navigate("Details",{itemId:item.id})}
+          onPress={() =>
+            this.props.navigation.navigate("Details", {
+              itemId: item.id,
+              thumbURL: item.thumbURL,
+              all_thumbURL: item.all_thumbURL,
+              base64: item.base64,
+              all_base64: item.all_base64,
+              userImg: item.userImg,
+              username: item.username,
+              title: item.title,
+              content: item.content,
+              postedAt: item.postedAt,
+              status: item.status,
+            })
+          }
         >
           <Image
             source={{

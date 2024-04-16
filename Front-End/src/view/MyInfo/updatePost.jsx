@@ -16,53 +16,46 @@ import * as FileSystem from 'expo-file-system';
 export default function UpdatePost() {
   const route = useRoute();
   const postId = route.params.itemId;
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
+  // console.log(postId)
+  const userImg= route.params.userImg;
+  // console.log(userImg);
+  const username=route.params.username;
+  const [title, setTitle] = useState(route.params.title)
+  const [content, setContent] = useState(route.params.content)
   const [images, setImages] = useState([])
-  const [username, setUsername] = useState("")
-  const [userAvatar, setUserAvatar] = useState("")
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 获取图片
-        const response = await axios.get(
-          `http://10.0.2.2:3000/posts/${postId}`
-        )
-        const thumbURLs = response.data.images.map((image) =>
-          image.thumbURL
-            ? image.thumbURL
-            : `data:image/jpeg;base64,${image.base64}`
-        )
-        setImages(thumbURLs)
-        // 获取文章标题和内容
-        setTitle(response.data.title)
-        setContent(response.data.content)
-
-        // 获取用户名和头像
-        const userId = response.data.user
-        const userResponse = await axios.get(
-          `http://10.0.2.2:3000/users/${userId}`
-        )
-        setUsername(userResponse.data.username)
-        setUserAvatar(userResponse.data.userImg)
-        // setUserAvatar(`data:image/jpeg;base64,${userResponse.data.userImg}`)
-      } catch (error) {
-        console.log(error)
+        const response = await fetch("http://10.0.2.2:3000/getPost", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            postId: postId,
+          }),
+        });
+  
+        const data = await response.json();
+        const thumbURLs = data.images.map((image) => ({
+          width: image.width,
+          height: image.height,
+          // uri: image.thumbURL ? image.thumbURL : null,
+          base64: image.base64,
+        }));
+  
+        setImages(thumbURLs);
+      } catch (err) {
+        console.log(err);
       }
-    }
-    fetchData()
-  }, [])
-  console.log(title)
-  console.log(999);
-  console.log(images)
-  const [activeSlide, setActiveSlide] = useState(0)
-  const updateActiveSlide = (index) => {
-    setActiveSlide(index)
-  }
-  const user = useSelector(selectUser)
-  // console.log("user", user);
-  // const history = useHistory()
+    };
+  
+    fetchData();
+  }, [postId]);
+  
+
+
+ 
   const [isScrollEnabled, setIsScrollEnabled] = useState(true);
   const contentWidth = useRef(0);
   const navigation = useNavigation()
@@ -107,7 +100,7 @@ export default function UpdatePost() {
       return (
         <Image
           key={index}
-          source={{ uri: image}}
+          source={{ uri: `data:image/jpeg;base64,${image.base64}` }}
           style={styles.imageList}
         />
       )
@@ -117,19 +110,18 @@ export default function UpdatePost() {
   // 图片压缩
   const compressImage = async (image) => {
     // console.log("Image before compress: ", image);
-    const compressedImage = await ImageManipulator.manipulateAsync(
-      image.uri,
-      [{ resize: { width: 300 } }],
-      { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
-    )
+    // const compressedImage = await ImageManipulator.manipulateAsync(
+    //   image.uri,
+    //   [{ resize: { width: 300 } }],
+    //   { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
+    // )
     const returnImage = {
       // uri: compressedImage.uri,
-      thumbURL: compressedImage.uri,
+      thumbURL: null,
       base64: image.base64,
       height: image.height/(image.width/300),
       width: 300
     }
-    // console.log("Image after compress: ", returnImage);
     return returnImage;
 }
 
@@ -138,7 +130,7 @@ export default function UpdatePost() {
     try {
       const compressedImagesPromises = images.map(async (image) => compressImage(image));
       const compressedImages = await Promise.all(compressedImagesPromises);
-      const response = await fetch("http://10.0.2.2:3000/posts", {
+      const response = await fetch("http://10.0.2.2:3000/updatePost", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -147,18 +139,13 @@ export default function UpdatePost() {
         body: JSON.stringify({
           title: title,
           content: content,
+          status:status,
           images: compressedImages,
-          status: status,
-          // user: "6616cdfea41ccfe9f7678ff1", // user先以此代替
-          userId: user.userId,
-          username: user.username,
-          userImg: user.userImg,
+          postId:postId,
+          username: username,
         }),
     })
     if (response.ok) {
-      setTitle("")
-      setContent("")
-      setImages([])
       alert("发布成功")
       navigation.navigate("MyInfo")
     } else {
@@ -180,23 +167,6 @@ export default function UpdatePost() {
     console.log("发布游记")
     handleSubmit("committed")
   }
-
-  // 检验是否有用户信息
-  if(!user.username) {
-    return (
-      <ImageBackground source={require('../../assets/loginFirst.png')} style={styles.background}>
-        <View style={styles.wrapper}>
-          <Text style={styles.promptText}>请先登录</Text>
-          <Button
-            title="登录"
-            color="#F194FF"
-            accessibilityLabel="点击按钮登录"
-            onPress={() => navigation.navigate("Login")}
-          />
-        </View>
-      </ImageBackground>
-    )
-}
  
   return (
     <View style={styles.background}>
@@ -208,7 +178,7 @@ export default function UpdatePost() {
           <Ionicons name="chevron-back" size={32} color="gray" />
         </TouchableOpacity>
         <Image
-          source={{ uri: userAvatar ? userAvatar : "123456" }}
+          source={{ uri: userImg}}
           style={styles.userImage}
         />
         {/* 用户名 */}
@@ -377,6 +347,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     paddingBottom: wp("1%"),
+  },
+  userImage: {
+    width: wp("10%"),
+    height: wp("10%"),
+    borderRadius: 20,
+    marginLeft: -wp("20%"),
+    borderColor: "black",
+    borderWidth: 1,
   },
   background: {
     flex: 1,

@@ -329,10 +329,8 @@ class Operate extends PureComponent {
   }
 
   render() {
-    // console.log(this.props.item.id)
-    const { activeIndex } = this.props
-    // console.log(activeIndex);
-
+    const { activeIndex,item } = this.props
+    
     return (
       <View
         style={{
@@ -358,11 +356,19 @@ class Operate extends PureComponent {
         {/* 编辑*/}
         {(activeIndex === 1 || activeIndex === 2) && (
           <TouchableOpacity
-            onPress={() =>
-              this.props.navigation.navigate("UpdatePost", {
-                itemId: this.props.item.id,
-              })
-            }
+          onPress={() => {
+            this.props.navigation.navigate("UpdatePost", {
+              itemId: item.id,
+              userImg: item.userImg,
+              username: item.username,
+              title: item.title,
+              content: item.content,
+              postedAt: item.postedAt,
+              reason: item.reason,
+              reason_type: item.reason_type,
+              status: item.status,
+            })
+          }}
           >
             <Image
               source={require("../../assets/write.png")}
