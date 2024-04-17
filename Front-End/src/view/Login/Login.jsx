@@ -10,20 +10,8 @@ export default function Login() {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const [username, setUsername] = useState("")
-  const [userImg, setUserImg] = useState("")
   const [password, setPassword] = useState("")
-  const [isLogin, setIsLogin] = useState(false)
   const [hidePassword, setHidePassword] = useState(true)
-
-  // useEffect(() => {
-  //   const fetchUser = async () => { 
-  //     const username = await AsyncStorage.getItem("username");
-  //     const userImg = await AsyncStorage.getItem("userImg");
-  //     setUsername(username);
-  //     setUserImg(userImg);
-  //   }
-  //   fetchUser();
-  // }, [])
 
   async function handleLogin() {
     const response = await fetch("http://10.0.2.2:3000/login", {
@@ -38,13 +26,8 @@ export default function Login() {
     })
     const cookies = response.headers.get("set-cookie")
     // console.log(response.headers.get("set-cookie"))
-    // console.log(cookies);
 
     if (response.ok) {
-      // 获取用户头像
-      // const user = await data.user;
-      // await AsyncStorage.setItem("username", user.username);
-      // await AsyncStorage.setItem("userImg", user.userImg);
       const cookieArray =  cookies.split(', ');
       const userdata = {};
       cookieArray.forEach(cookie => {
@@ -132,29 +115,18 @@ const styles = StyleSheet.create({
     top: hp("5%"),
     alignItems: "center",
     justifyContent: "center",
-    // borderColor: "black",
-    // borderWidth: 10,
   },
   welcomeImage: {
     flex: 1,
     width: wp("70%"),
     resizeMode: "contain",
     marginLeft: 20,
-    // borderColor: "black",
-    // borderWidth: 1,
   },
-  // welcomeText: {
-  //   fontSize: 30,
-  //   color: "green",
-  //   fontWeight: "bold",
-  // },
   imageContainer: {
     width: "100%",
     height: hp("40%"),
     top: hp("20%"),
     position: "absolute",
-    // borderColor: "black",
-    // borderWidth: 10,
   },
   image: {
     flex: 1,
@@ -186,16 +158,11 @@ const styles = StyleSheet.create({
   pwdContainer: {
     flexDirection: "row",
     alignItems: "center",
-    // borderColor: "gray",
-    // borderWidth: 1,
   },
   eye: {
     position: "absolute",
     right: wp("3%"),
-    // top: hp("3%") + 40,
     bottom: hp("3%") - 12,
-    // borderColor: "gray",
-    // borderWidth: 1,
   },
   textContainer: {
     flexDirection: "row",
@@ -203,20 +170,10 @@ const styles = StyleSheet.create({
     width: wp("80%"),
     justifyContent: "space-between",
     alignItems: "center",
-    // borderColor: "gray",
-    // borderWidth: 1,
   },
   registerText: {
-    // marginLeft: wp("10%")
-    // borderColor: "gray",
-    // borderWidth: 1,
   },
   forgetPsw: {
-    // position: "absolute",
-    // marginLeft: wp("50%")
-    // right: wp("10%"),
-    // borderColor: "gray",
-    // borderWidth: 1,
   },
   buttonContainer: {
     marginTop: hp("2%"),
@@ -238,18 +195,4 @@ const styles = StyleSheet.create({
     color: "white",
     paddingBottom: 2,
   },
-  // registerButton: {
-  //   borderWidth: 1,
-  //   borderRadius: 10,
-  //   width: wp("20%"),
-  //   height: hp("5%"),
-  //   margin: 5,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  // },
-  // registerText: {
-  //   fontSize: 16,
-  //   color: "black",
-  //   paddingBottom: 2,
-  // },
 })

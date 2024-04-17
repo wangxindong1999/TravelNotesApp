@@ -9,7 +9,6 @@ import { Ionicons, AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { Dimensions } from 'react-native';
-import * as FileSystem from 'expo-file-system';
 // import { useHistory } from 'react-router-dom';
 
 export default function AddTrade() {
@@ -25,13 +24,6 @@ export default function AddTrade() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [images, setImages] = useState([])
-
-  // 先登录
-  // useEffect(() => {
-  //   if (user.username === "") {
-  //     navigation.navigate("Login")
-  //   }
-  // }, [user])
 
   const onContentLayout = (e) => {
     const { width } = e.nativeEvent.layout;
@@ -54,7 +46,6 @@ export default function AddTrade() {
     // console.log(result);
 
     if (!result.canceled) {
-      // setImages(result.assets[0].base64);
       setImages(prevImages => [...prevImages, {
         uri: result.assets[0].uri,
         base64: result.assets[0].base64,
@@ -86,10 +77,13 @@ export default function AddTrade() {
       [{ resize: { width: 300 } }],
       { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
     )
+
+    const base64Compressed = await FileSystem.readAsStringAsync(compressedImage.uri, { encoding: 'base64' })
+    
     const returnImage = {
       // uri: compressedImage.uri,
       // thumbURL: compressedImage.uri,
-      base64: image.base64,
+      base64: base64Compressed,
       height: image.height/(image.width/300),
       width: 300
     }
@@ -113,7 +107,6 @@ export default function AddTrade() {
           content: content,
           images: compressedImages,
           status: status,
-          // user: "6616cdfea41ccfe9f7678ff1", // user先以此代替
           userId: user.userId,
           username: user.username,
           userImg: user.userImg,
@@ -123,10 +116,10 @@ export default function AddTrade() {
       setTitle("")
       setContent("")
       setImages([])
-      alert("发布成功")
+      status === "draft" ? alert("已存入草稿箱") : alert("发布成功，请等待审核")
       navigation.navigate("MyInfo")
     } else {
-      alert("发布失败")
+      status === "draft" ? alert("存入草稿箱失败") : alert("发布失败")
     } 
   } catch (error) {
       console.error("Error:", error)
@@ -160,7 +153,7 @@ export default function AddTrade() {
         </View>
       </ImageBackground>
     )
-}
+  }
  
   return (
     <View style={styles.background}>
@@ -234,39 +227,22 @@ const styles = StyleSheet.create({
     width: hp("12%"),
     height: hp("15%"),
     resizeMode: "contain",
-    // marginLeft: 20,
     marginRight: 0,
-    // borderColor: "gray",
-    // borderWidth: 2,
-    // borderRadius: 10,
   },
   imageListContainer: {
-    // width: wp("500%"),
-    
     height: hp("15%"),
     flexDirection: "row",
     justifyContent: "flex-start",
     marginRight: 20,
-    // flexWrap: "wrap",
-    // justifyContent: "center",
-    // alignItems: "center",
-    // borderColor: "black",
-    // borderWidth: 2,
   },
   addImageContainer: {
     width: hp("15%"),
     height: hp("15%"),
-    // justifyContent: "center",
-    // alignItems: "center",
-    // borderColor: "black",
-    // borderWidth: 2,
   },
   addImage: {
-    // flex: 1,
     width: hp("15%"),
     height: hp("15%"),
     resizeMode: "contain",
-    // marginLeft: 20,
     marginRight: -10,
     borderColor: "gray",
     borderWidth: 2,
@@ -284,12 +260,8 @@ const styles = StyleSheet.create({
   contentInput:{
     width: wp("90%"),
     minHeight: hp("1%"),
-    // height: Math.max(35, height),
-    // marginTop: 8,
     marginLeft: 20,
     fontSize: 16,
-    // borderColor: "black",
-    // borderWidth: 2,
   },
   inboxContainer:{
     width: wp("15%"),
@@ -298,16 +270,12 @@ const styles = StyleSheet.create({
     left: wp("3%"),
     justifyContent: "center",
     alignItems: "center",
-    // borderColor: "black",
-    // borderWidth: 2,
   },
   iconContainer:{
     width: wp("7%"),
     height: wp("7%"),
     justifyContent: "center",
     alignItems: "center",
-    // borderColor: "black",
-    // borderWidth: 2,
     backgroundColor: "#eaeded",
     borderRadius: 25,
   },
@@ -316,8 +284,6 @@ const styles = StyleSheet.create({
   },
   inboxText: {
     fontSize: 16,
-    // borderColor: "black",
-    // borderWidth: 2,
   },
   publishBtn: {
     width: wp("75%"),
