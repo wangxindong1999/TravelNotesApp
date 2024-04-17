@@ -11,7 +11,7 @@ router.post("/myInfo", async function (req, res) {
   const { username } = req.body
   let statusString = {}
   console.log(currentPage)
-  
+
   switch (status) {
     case 3:
       statusString = "draft"
@@ -79,6 +79,12 @@ router.post("/myInfo", async function (req, res) {
           }
           all_images.push(image)
         })
+        if (!post.userImg.includes("http")) {
+          const imagePath = "img/" + post.userImg + ".png"
+          const imageBuffer = fs.readFileSync(imagePath)
+          post.userImg =
+            "data:image/jpeg;base64," + imageBuffer.toString("base64")
+        }
 
         return {
           reviewer_id: post._id,

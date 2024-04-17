@@ -34,7 +34,14 @@ export default function Details() {
     ? route.params.all_base64
     : route.params.all_thumbURL
   // console.log(images);
-  const userImg = route.params.userImg
+  let userImg = route.params.userImg
+  // if (!route.params.userImg.includes("http")) {
+  //   const imagePath = "img/" + userImg + ".png"
+  //        imageBuffer = fs.readFileSync(imagePath)
+  //         userImg =
+  //           "data:image/jpeg;base64," + imageBuffer.toString("base64")
+  //       }
+  // }
   const username = route.params.username
   const title = route.params.title
   const content = route.params.content

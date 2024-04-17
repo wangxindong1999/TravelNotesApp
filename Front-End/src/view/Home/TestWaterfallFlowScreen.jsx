@@ -92,8 +92,8 @@ export default class TestWaterfallFlowScreen extends Component {
             const cardWidth = Math.floor(window.width / 2)
             const title = item.title
             const content = item.content
-            console.log(all_thumbURL)
-            // console.log(item.images, "dwadawd")
+            // console.log(all_thumbURL)
+            // console.log(userImg, "dwadawd")
             return {
               width: cardWidth,
               height: Math.floor((height / width) * cardWidth),

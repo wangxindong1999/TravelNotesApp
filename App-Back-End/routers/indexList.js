@@ -50,6 +50,12 @@ router.post("/indexList", async function (req, res) {
         }
         //获取所有图片
         let all_images = []
+        if (!post.userImg.includes("http")) {
+          const imagePath = "img/" + post.userImg + ".png"
+          const imageBuffer = fs.readFileSync(imagePath)
+          post.userImg =
+            "data:image/jpeg;base64," + imageBuffer.toString("base64")
+        }
         post.images.forEach((item) => {
           let image = {}
           if (item.thumbURL) {
