@@ -86,9 +86,9 @@ export default function Login() {
           <TouchableOpacity style={styles.registerText} onPress={() => navigation.navigate('Register')}>
             <Text style={{color: "gray", fontSize: 16}}>点击注册</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity style={styles.forgetPsw} onPress={() => console.log("忘记密码")}>
+          <TouchableOpacity style={styles.forgetPsw} onPress={() => console.log("忘记密码")}>
             <Text style={{color: "gray", fontSize: 16}}>忘记密码</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
