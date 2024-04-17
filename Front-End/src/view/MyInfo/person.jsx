@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native"
 
 export default function Person({route}) {
   const { username, userImg } = route.params;
-  console.log(username,userImg)
+  console.log(username)
   const navigation = useNavigation();
   logout =async ()=>{
   console.log(598)

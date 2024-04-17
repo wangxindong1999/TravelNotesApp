@@ -44,6 +44,7 @@ export default class TestWaterfallFlowScreen extends Component {
   }
 
   loadData = async (page = 1, refreshing) => {
+    console.log("重新加载主页")
     if (this.loading) {
       return
     }

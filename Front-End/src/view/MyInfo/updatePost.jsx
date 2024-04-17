@@ -50,7 +50,7 @@ export default function UpdatePost() {
         })
 
         const data = await response.json()
-        console.log(data)
+        // console.log(data)
         const thumbURLs = data.images.map((image) => ({
           width: image.width,
           height: image.height,
