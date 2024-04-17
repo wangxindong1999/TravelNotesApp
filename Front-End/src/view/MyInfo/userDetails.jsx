@@ -16,6 +16,7 @@ export default function UserDetails({ route }) {
   const { uname, uImg, index } = route.params
   const [value, setText] = useState(uname)
   // const userImg=uImg.uri
+  console.log(uImg.uri, "dwadwa")
   const [img, changeImg] = useState(uImg)
   // console.log(img)
   const [prePassword, setPrePassword] = useState("")
@@ -126,11 +127,7 @@ export default function UserDetails({ route }) {
             }}
           >
             <Image
-              source={
-                img.uri.includes("http")
-                  ? img
-                  : { uri: "data:image/jpeg;base64," + img.uri }
-              }
+              source={img}
               style={{
                 width: 300,
                 height: 300,
