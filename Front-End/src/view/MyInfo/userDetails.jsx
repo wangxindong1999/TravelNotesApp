@@ -127,7 +127,13 @@ export default function UserDetails({ route }) {
             }}
           >
             <Image
-              source={img}
+              source={
+                img.uri.includes("http")
+                  ? img
+                  : img.uri.includes("data:image/jpeg;base64")
+                  ? img
+                  : { uri: `data:image/jpeg;base64,${img.uri}` }
+              }
               style={{
                 width: 300,
                 height: 300,

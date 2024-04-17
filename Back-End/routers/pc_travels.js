@@ -301,6 +301,15 @@ router.get("/travels/getDetail", async (req, res) => {
             item1.base64 = imageBase64
           }
         })
+        if (!item.userImg.includes("http")) {
+          const imagePath =
+            path.join(path.join(__dirname, ".."), "../App-Back-End/img/") +
+            imageName +
+            ".png"
+          const imageBuffer = fs.readFileSync(imagePath)
+          item.userImg =
+            "data:image/jpeg;base64," + imageBuffer.toString("base64")
+        }
       })
       res.status(200)
       res.send(result1)
