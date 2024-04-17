@@ -16,7 +16,7 @@ export default function UserDetails({ route }) {
   const { uname, uImg, index } = route.params
   const [value, setText] = useState(uname)
   // const userImg=uImg.uri
-  console.log(uImg.uri, "dwadwa")
+  // console.log(uImg.uri, "dwadwa")
   const [img, changeImg] = useState(uImg)
   // console.log(img)
   const [prePassword, setPrePassword] = useState("")
@@ -58,7 +58,7 @@ export default function UserDetails({ route }) {
 
       if (response.ok) {
         alert("修改成功！")
-        navigation.navigate("Homes")
+        navigation.navigate("MyInfo")
       } else {
         alert("修改失败！")
       }
@@ -83,7 +83,7 @@ export default function UserDetails({ route }) {
 
       if (response.ok) {
         alert("修改成功！")
-        navigation.navigate("Homes")
+        navigation.navigate("MyInfo")
       } else {
         alert("修改失败！")
       }
@@ -109,7 +109,7 @@ export default function UserDetails({ route }) {
 
       if (response.ok) {
         alert("修改成功！")
-        navigation.navigate("Homes")
+        navigation.navigate("MyInfo")
       } else {
         alert("修改失败！")
       }

@@ -10,7 +10,7 @@ import {
 import CardList from "./cardList"
 import { useSelector, useDispatch } from "react-redux"
 import { setActiveIndex } from "../../store/feature/activeIndexSlice"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useRoute } from "@react-navigation/native"
 import { useFocusEffect } from "@react-navigation/native"
 
 export default function MyInfo() {
@@ -18,7 +18,7 @@ export default function MyInfo() {
   const bkImage = {
     uri: "https://img1.baidu.com/it/u=1884825806,3687074543&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889",
   }
-
+  
   const activeIndex = useSelector((state) => state.activeIndex.value)
   const dispatch = useDispatch()
   const [username, setUsername] = useState()
@@ -34,7 +34,7 @@ export default function MyInfo() {
   useFocusEffect(
     React.useCallback(() => {
       // 在这里执行您想要在每次切换到该页面时执行的逻辑
-      console.log("Home tab focused")
+      console.log("MyInfo tab focused")
       const fetchData = async () => {
         console.log(5555)
         try {

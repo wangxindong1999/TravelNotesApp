@@ -1,8 +1,8 @@
-import React from "react"
+import React, { useRef } from "react"
 
 import { Text, Button, View,StatusBar,StyleSheet ,TextInput,TouchableOpacity,MagnifyingGlassIcon} from "react-native"
 // import { Text, Button, View, SafeAreaView, StatusBar } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation,useFocusEffect } from "@react-navigation/native"
 import Title from "./title"
 import TestWaterfallFlowScreen from "./TestWaterfallFlowScreen"
 
@@ -10,6 +10,17 @@ import TestWaterfallFlowScreen from "./TestWaterfallFlowScreen"
 
 export default function Home() {
   const navigation = useNavigation();
+  const childRef=useRef(null);
+  childLoadData=()=>{
+    childRef.current.loadData(1,true);
+  }
+  useFocusEffect(
+    React.useCallback(() => {
+      // 在这里执行每次跳转重新加载页面
+      this.childLoadData();
+      console.log("Home tab focused");
+    })
+  )
 
   return (
     <View style={styles.container}>
@@ -21,7 +32,7 @@ export default function Home() {
         {/* <Button title="navigate to details" onPress={() => navigation.navigate('Details')}></Button> */}
          {/* <Button title="navigate to addtrade" onPress={() => navigation.navigate('AddTrade')}></Button> */}
         {/* <Button title="navigate to welcome" onPress={() => navigation.navigate('Welcome')}></Button>  */}
-        <TestWaterfallFlowScreen navigation={navigation}/>
+        <TestWaterfallFlowScreen navigation={navigation} ref={childRef}/>
         {/* <Button title="click me" onPress={() => navigation.navigate('Login')}></Button> */}
     </View>
   )
