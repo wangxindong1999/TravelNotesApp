@@ -50,12 +50,14 @@ app.post("/register", async function (req, res) {
   const username = req.body.username
   const password = req.body.password
 
+  const defaultAvatarUrl = "https://img2.baidu.com/it/u=2248368782,3106831784&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=666";
+
   // 先查找数据库中是否已经有同名的用户存在
   const user = await Users.findOne({ username: username })
 
   if (user) {
     // 如果已经存在同名用户，返回错误消息
-    res.status(400).json({ message: "Username already exists" })
+    res.status(400).json({ message: "用户名已存在" })
   } else {
     try {
       // 对密码进行哈希处理
@@ -64,16 +66,17 @@ app.post("/register", async function (req, res) {
       let newUser = new Users({
         username: username,
         password: hashedPassword,
+        userImg: defaultAvatarUrl,
       })
 
       await newUser.save()
 
-      res.json({ message: "User created successfully" })
+      res.json({ message: "用户创建成功" })
     } catch (err) {
       console.error("Error occurred during registration:", err)
       res
         .status(500)
-        .json({ message: "Could not create user", error: err.message })
+        .json({ message: "无法创建用户，请稍后重试", error: err.message })
     }
   }
 })
@@ -88,18 +91,18 @@ app.post("/login", async function (req, res) {
     const user = await Users.findOne({ username: username })
 
     if (!user) {
-      return res.status(401).json({ message: "Invalid username" })
+      return res.status(401).json({ message: "用户名不存在，请先注册" })
     }
 
     // 检查密码是否匹配
     user.checkPassword(password, function (err, isMatch) {
       if (err) {
         console.log(err)
-        return res.status(500).json({ message: "Error logging in", err })
+        return res.status(500).json({ message: "登陆错误，请稍后重试", err })
       }
 
       if (!isMatch) {
-        return res.status(401).json({ message: "Invalid password" })
+        return res.status(401).json({ message: "密码错误" })
       }
 
       // 检查用户头像是否存在
@@ -112,7 +115,7 @@ app.post("/login", async function (req, res) {
       res.cookie("username", username)
       res.cookie("userImg", user.userImg)
 
-      return res.status(200).json({ message: "Logged in successfully" })
+      return res.status(200).json({ message: "登录成功" })
     })
   } catch (err) {
     console.log(err)
@@ -120,8 +123,7 @@ app.post("/login", async function (req, res) {
   }
 })
 
-// 游记
-
+// 游记创建
 app.post("/posts", async function (req, res) {
   const title = req.body.title
   const content = req.body.content
@@ -156,12 +158,12 @@ app.post("/posts", async function (req, res) {
 
     await newPost.save()
 
-    res.json({ message: "Post created successfully" })
+    res.json({ message: "游记创建成功" })
   } catch (err) {
     console.error("Error occurred during post creation:", err)
     res
       .status(500)
-      .json({ message: "Could not create post", error: err.message })
+      .json({ message: "游记创建失败", error: err.message })
   }
 })
 
@@ -172,7 +174,7 @@ app.get("/posts/:id", async function (req, res) {
     const post = await Posts.findById(req.params.id)
     console.log(post);
     if (!post) {
-      return res.status(404).json({ message: "Post not found" })
+      return res.status(404).json({ message: "未找到游记" })
     }
     const newpost = post.images.map((item) => {
       return {
@@ -190,7 +192,7 @@ app.get("/posts/:id", async function (req, res) {
   } catch (err) {
     console.log(err)
     return res.status(500).json({
-      message: "Error occurred during post retrieval",
+      message: "获取游记失败",
       error: err.message,
     })
   }
@@ -202,14 +204,14 @@ app.get("/users/:id", async function (req, res) {
     const user = await Users.findById(req.params.id)
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" })
+      return res.status(404).json({ message: "未找到用户" })
     }
 
     return res.json(user)
   } catch (err) {
     console.log(err)
     return res.status(500).json({
-      message: "Error occurred during user retrieval",
+      message: "获取用户失败",
       error: err.message,
     })
   }

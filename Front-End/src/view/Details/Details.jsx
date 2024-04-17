@@ -21,14 +21,9 @@ import { useSelector } from "react-redux"
 import { selectUser } from "../../store/feature/userSlice"
 
 export default function Details() {
+  const user = useSelector(selectUser)
   const navigation = useNavigation()
   const route = useRoute()
-  console.log(route.params.status, "dwadwa")
-  // const postId = route.params.itemId;
-  // const url = route.params.url;
-  // console.log(url);
-  // const images = route.params.all_url;
-  // const images = route.params.all_base64;
   const status = route.params.status
   const images = route.params.all_base64[0]
     ? route.params.all_base64
@@ -45,62 +40,30 @@ export default function Details() {
   const username = route.params.username
   const title = route.params.title
   const content = route.params.content
-  const postedAt = route.params.postedAt
   const reason = route.params.reason
   const reason_type = route.params.reason_type
-  const user = useSelector(selectUser)
-  // const [username, setUsername] = useState('');
-  // const [title, setTitle] = useState('');
-  // const [content, setContent] = useState('');
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       // 获取图片
-  //       const response = await axios.get(
-  //         `http://10.0.2.2:3000/posts/${postId}`
-  //       )
-  // console.log(response.data);
-  // console.log("0");
-  // console.log("1", response.data.images);
-  // const thumbURLs = response.data.images.map(image => image.thumbURL)
-  // setImages(thumbURLs)
-  // const thumbURLs = response.data.images.map((image) =>
-  //   image.thumbURL
-  //     ? image.thumbURL
-  //     : `data:image/jpeg;base64,${image.base64}`
-  // )
-  // setImages(thumbURLs)
-  // console.log("2",thumbURLs);
-  // console.log("3",images);
-  // console.log("4");
-  // setImages(response.data.images.map(image => `data:image/jpeg;base64,${image.base64}`))
-
-  // 获取文章标题和内容
-  // setTitle(response.data.title)
-  // setContent(response.data.content)
-
-  // // 获取用户名和头像
-  // const userId = response.data.user
-  // const userResponse = await axios.get(
-  //   `http://10.0.2.2:3000/users/${userId}`
-  // )
-  // console.log(userResponse.data);
-  // setUsername(userResponse.data.username)
-  // setUserAvatar(userResponse.data.userImg)
-  // setUserAvatar(`data:image/jpeg;base64,${userResponse.data.userImg}`)
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  //   fetchData()
-  // }, [])
 
   const [activeSlide, setActiveSlide] = useState(0)
   const updateActiveSlide = (index) => {
     setActiveSlide(index)
   }
-  // console.log("6", images.length);
+
+  // 检验是否有用户信息
+  if(!user.username) {
+    return (
+      <ImageBackground source={require('../../assets/loginFirst.png')} style={styles.background}>
+        <View style={styles.wrapper}>
+          <Text style={styles.promptText}>请先登录</Text>
+          <Button
+            title="登录"
+            color="#F194FF"
+            accessibilityLabel="点击按钮登录"
+            onPress={() => navigation.navigate("Login")}
+          />
+        </View>
+      </ImageBackground>
+    )
+  }
 
   return (
     <View style={styles.background}>
@@ -182,13 +145,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: wp("2%"),
-    // borderColor: "black",
-    // borderWidth: 1,
   },
   goBackButton: {
     marginLeft: wp("3%"),
-    // borderColor: "black",
-    // borderWidth: 1,
   },
   userImage: {
     width: wp("10%"),
@@ -201,15 +160,10 @@ const styles = StyleSheet.create({
   username: {
     marginLeft: -wp("20%"),
     fontSize: 20,
-    // fontWeight: "bold",
-    // borderColor: "black",
-    // borderWidth: 1,
   },
   shareButton: {
     marginLeft: wp("20%"),
     marginRight: wp("3%"),
-    // borderColor: "black",
-    // borderWidth: 1,
   },
   articleContainer: {
     width: wp("100%"),

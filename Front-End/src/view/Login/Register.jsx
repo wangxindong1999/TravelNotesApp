@@ -8,11 +8,34 @@ export default function Login() {
   const navigation = useNavigation()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [isLogin, setIsLogin] = useState(false)
   const [hidePassword, setHidePassword] = useState(true)
 
+  const validateInput = () => {
+    if (!username) {
+      alert('用户名不能为空');
+      return false;
+    }
+    if (!password) {
+      alert('密码不能为空');
+      return false;
+    }
+    if (username.length < 3 || username.length > 10) {
+      alert('用户名长度必须在3~10个字符之间');
+      return false;
+    }
+    if (password.length < 8) {
+      alert('密码必须至少包含8个字符');
+      return false;
+    }
+    return true;
+  }
+
   async function handleRegister() {
-    const response = await fetch("http://10.0.2.2:3000/login", {
+    if (!validateInput()) {
+      return;
+    }
+
+    const response = await fetch("http://10.0.2.2:3000/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,7 +51,7 @@ export default function Login() {
       alert("注册成功")
       navigation.navigate("Login")
     } else {
-      alert(data.error)
+      alert(data.message)
     }
   }
 
@@ -94,29 +117,18 @@ const styles = StyleSheet.create({
     top: hp("5%"),
     alignItems: "center",
     justifyContent: "center",
-    // borderColor: "black",
-    // borderWidth: 10,
   },
   welcomeImage: {
     flex: 1,
     width: wp("70%"),
     resizeMode: "contain",
     marginLeft: 20,
-    // borderColor: "black",
-    // borderWidth: 1,
   },
-  // welcomeText: {
-  //   fontSize: 30,
-  //   color: "green",
-  //   fontWeight: "bold",
-  // },
   imageContainer: {
     width: "100%",
     height: hp("40%"),
     top: hp("20%"),
     position: "absolute",
-    // borderColor: "black",
-    // borderWidth: 10,
   },
   image: {
     flex: 1,
@@ -148,16 +160,11 @@ const styles = StyleSheet.create({
   pwdContainer: {
     flexDirection: "row",
     alignItems: "center",
-    // borderColor: "gray",
-    // borderWidth: 1,
   },
   eye: {
     position: "absolute",
     right: wp("3%"),
-    // top: hp("3%") + 40,
     bottom: hp("3%") - 12,
-    // borderColor: "gray",
-    // borderWidth: 1,
   },
   textContainer: {
     flexDirection: "row",
@@ -165,8 +172,6 @@ const styles = StyleSheet.create({
     width: wp("80%"),
     justifyContent: "space-between",
     alignItems: "center",
-    // borderColor: "gray",
-    // borderWidth: 1,
   },
   loginText: {
   },
