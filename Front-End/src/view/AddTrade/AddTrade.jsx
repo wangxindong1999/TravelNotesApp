@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useRef } from "react"
-import { useSelector, useDispatch } from "react-redux"
-import { selectUser, logout } from "../../store/feature/userSlice"
-import { Button, Input } from "@rneui/themed"
+import React, { useState, useRef } from "react"
+import { useSelector } from "react-redux"
+import { selectUser } from "../../store/feature/userSlice"
+import { Button } from "@rneui/themed"
 import { View, ScrollView, Image, Text, TextInput, StyleSheet, TouchableOpacity, StatusBar, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
+import * as FileSystem from 'expo-file-system';
 import { Dimensions } from 'react-native';
 // import { useHistory } from 'react-router-dom';
 
