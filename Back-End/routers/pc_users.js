@@ -8,7 +8,7 @@ const path = require("path")
 router.get("/user/login", async (req, res) => {
   try {
     const result = await usersSchema.findOne({ username: req.query.username })
-    if (!result.id || (!result.isAdmin && !result.isReviewer)) {
+    if (!result || (!result.isAdmin && !result.isReviewer)) {
       res.status(404)
       res.send("用户不存在")
       res.end()

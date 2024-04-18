@@ -78,6 +78,7 @@ export default function Details(props) {
               reason: item.reason,
               reason_type: item.reason_type,
               userImg: item.userImg,
+              createdAt: item.createdAt,
             }
           })[0]
         )
@@ -170,7 +171,7 @@ export default function Details(props) {
                       : "未通过"}
                   </Button>
                 </p>
-                <p>提交时间：{travelDetail.updatedAt?.replace("T", " ")}</p>
+                <p>提交时间：{travelDetail.createdAt?.replace("T", " ")}</p>
               </div>
             </div>
             {travelDetail.flag === "committed" ? (

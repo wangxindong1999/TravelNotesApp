@@ -304,7 +304,7 @@ router.get("/travels/getDetail", async (req, res) => {
         if (!item.userImg.includes("http")) {
           const imagePath =
             path.join(path.join(__dirname, ".."), "../App-Back-End/img/") +
-            imageName +
+            item.userImg +
             ".png"
           const imageBuffer = fs.readFileSync(imagePath)
           item.userImg =
